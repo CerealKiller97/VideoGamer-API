@@ -1,0 +1,7 @@
+alias gc="git clone"
+alias ga="git add"
+alias ga.="git add ."
+alias gcm="git commit -m"
+alias gp="git pull"
+alias gps="git push"
+alias gs="git status"
