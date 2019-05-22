@@ -25,15 +25,18 @@ namespace EntityConfiguration
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.ApplyConfiguration(new UserEntityConfiguration());
-        }
+            modelBuilder.ApplyConfiguration(new GameGenreEntityConfiguration());
+            modelBuilder.ApplyConfiguration(new GamePlatformEntityConfiguration());
 
-        public override int SaveChanges()
+		}
+
+		public override int SaveChanges()
         {
             var entries = ChangeTracker.Entries();
 
             foreach (var entry in entries)
             {
-                if (entry.Entity is Model item &&
+                if (entry.Entity is AbstractModel<Guid> item &&
                     entry.State == EntityState.Added &&
                     item.CreatedAt != default) item.CreatedAt = DateTime.UtcNow;
             }

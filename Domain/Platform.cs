@@ -15,7 +15,7 @@ namespace Domain
 		Xbox360,
 		XboxOne
 	}
-	public class Platform : Model<Guid>
+	public class Platform : AbstractModel<Guid>
 	{
 		public Platforms Name { get; set; }
         public ICollection<GamePlatform<Guid, Guid>> GamePlatforms { get; set; }

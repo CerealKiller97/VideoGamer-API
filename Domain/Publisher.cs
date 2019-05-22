@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Domain
 {
-	public class Publisher : Model<Guid>
+	public class Publisher : AbstractModel<Guid>
 	{
 		public string Name { get; set; }
 		public string HQ { get; set; }

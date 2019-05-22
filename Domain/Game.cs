@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Domain.Relations;
 
 namespace Domain
 {
@@ -11,14 +12,14 @@ namespace Domain
 		Pegi16 = 16,
 		Pegi18 = 18
 	}
-	public class Game<TUserKey> : Model<Guid>
+	public class Game<TUserKey> : AbstractModel<Guid>
 	{
 		public string Name { get; set; }
 		public string Engine { get; set; }
 		public int PublisherId { get; set; }
 		public Publisher Publisher { get; set; }
 		public PegiAgeRating AgeLabel { get; set; }
-		public DateTime RealeseDate { get; set; }
+		public DateTime ReleaseDate { get; set; }
 		public ICollection<Genre> Genres { get; set; }
 		public ICollection<GamePlatform<Guid,Guid>> GamePlatforms { get; set; }
         public TUserKey UserId { get; set; }

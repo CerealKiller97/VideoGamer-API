@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Domain
 {
-	public class User : Model<Guid>
+	public class User : AbstractModel<Guid>
 	{
 		public string FirstName { get; set; }
 		public string LastName { get; set; }
