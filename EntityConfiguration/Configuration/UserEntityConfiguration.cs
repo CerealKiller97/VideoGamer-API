@@ -9,6 +9,10 @@ namespace EntityConfiguration.Configuration
 	{
 		public void Configure(EntityTypeBuilder<User> builder)
 		{
+			// Primary key
+			builder.HasKey(u => u.Id);
+
+			// Properties
             builder.Property(u => u.Id)
                 .ValueGeneratedOnAdd();
 
@@ -30,6 +34,12 @@ namespace EntityConfiguration.Configuration
             builder.Property(u => u.Email)
                 .IsRequired(true)
                 .HasMaxLength(150);
-		}
+
+			// Relations
+            builder.HasMany(u => u.Games)
+                .WithOne(g => g.User)
+                .HasPrincipalKey(u => u.Id)
+                .HasForeignKey(g => g.UserId);
+        }
 	}
 }

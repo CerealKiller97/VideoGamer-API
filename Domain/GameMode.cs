@@ -1,17 +1,13 @@
-﻿using System;
-
-namespace Domain
+﻿namespace Domain
 {
 	public enum GameModes
 	{
-		SinglePlayer = 1,
-		MultiPlayer  = 1 << 2,
-		Cooperative  = 1 << 3,
-		SingleMultiPlayer = SinglePlayer | MultiPlayer
-	}
-	//   8421 => 0000 => 0001 => 0010
-	public class GameMode : AbstractModel<Guid>
-	{
-
+		SINGLEPLAYER = 1,
+		MULTIPLAYER = 1 << 1,
+		ZOMBIES = 1 << 3,
+		COOP = 1 << 2,
+		SINGLE_AND_MULTIPLAYER = SINGLEPLAYER | MULTIPLAYER,
+        SINGLE_AND_COOP = SINGLEPLAYER | COOP,
+		ZOMBIES_SINGLE_AND_MULTIPLAYER = ZOMBIES | MULTIPLAYER | SINGLEPLAYER
 	}
 }

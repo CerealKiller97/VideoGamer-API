@@ -1,5 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Bogus;
 using Domain;
 using Microsoft.EntityFrameworkCore;
@@ -23,7 +22,6 @@ namespace EntityConfiguration.Seeders
 			if (! await _context.Users.AnyAsync())
 			{
 				var testUsers = new Faker<User>()
-					.RuleFor(u => u.Id, Guid.NewGuid)
 					.RuleFor(u => u.FirstName, f => f.Name.FirstName())
 					.RuleFor(u => u.LastName, f => f.Name.LastName())
 					.RuleFor(u => u.Password, f => f.Internet.Password())
@@ -44,8 +42,17 @@ namespace EntityConfiguration.Seeders
 		{
 			if (! await _context.Games.AnyAsync())
 			{
-				var testGames = new Faker<Game<Guid>>()
+				var testGames = new Faker<Game>()
 					.RuleFor(g => g.Name, f => f.Name.FirstName());
+			}
+		}
+
+		public async Task AddGenres()
+		{
+			if (! await _context.Genres.AnyAsync())
+			{
+				var testGenres = new Faker<Genre>()
+					.RuleFor(g => g.Name, f => f.System.AndroidId());
 			}
 		}
 	}

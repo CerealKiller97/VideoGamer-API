@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Domain;
 using Domain.Relations;
 
 namespace Domain
@@ -14,10 +15,10 @@ namespace Domain
 		Xbox,
 		Xbox360,
 		XboxOne
-	}
-	public class Platform : AbstractModel<Guid>
+    }
+	public class Platform : AbstractModel
 	{
 		public Platforms Name { get; set; }
-        public ICollection<GamePlatform<Guid, Guid>> GamePlatforms { get; set; }
+		public ICollection<GamePlatform> GamePlatforms { get; set; }
     }
 }

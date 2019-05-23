@@ -8,6 +8,13 @@ namespace EntityConfiguration.Configuration
 	{
 		public void Configure(EntityTypeBuilder<Publisher> builder)
 		{
+			// Primary key
+			builder.HasKey(p => p.Id);
+
+			builder.Property(p => p.Id)
+				.ValueGeneratedOnAdd();
+
+			// Properties
 			builder.Property(p => p.Name)
 				.HasMaxLength(100)
 				.IsRequired(true);
@@ -26,6 +33,12 @@ namespace EntityConfiguration.Configuration
 			builder.Property(p => p.Website)
 				.HasMaxLength(250)
 				.IsRequired(true);
+
+			// Relations
+			builder.HasMany(p => p.Games)
+				.WithOne(g => g.Publisher)
+				.HasPrincipalKey(p => p.Id)
+				.HasForeignKey(g => g.PublisherId);
 		}
 	}
 }

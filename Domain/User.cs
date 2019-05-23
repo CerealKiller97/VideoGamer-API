@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Domain
 {
-	public class User : AbstractModel<Guid>
+	public class User : AbstractModel
 	{
 		public string FirstName { get; set; }
 		public string LastName { get; set; }
@@ -15,6 +15,6 @@ namespace Domain
         public DateTime? LastLogin { get; set; }
         public int? UtcOffset { get; set; }
 
-        public ICollection<Game<Guid>> Games { get; set; }
+        public ICollection<Game> Games { get; set; }
     }
 }

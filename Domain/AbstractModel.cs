@@ -2,9 +2,9 @@
 
 namespace Domain
 {
-	public abstract class AbstractModel<T>
+	public abstract class AbstractModel
 	{
-		public T Id { get; set; }
+		public int Id { get; set; }
 		public DateTime CreatedAt { get; set; }
 		public DateTime? UpdatedAt { get; set; }
 	}
