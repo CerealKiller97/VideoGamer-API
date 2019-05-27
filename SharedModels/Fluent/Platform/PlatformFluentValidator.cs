@@ -1,13 +1,12 @@
-﻿using Domain;
-using FluentValidation;
+﻿using FluentValidation;
 
 namespace SharedModels.Fluent.Platform
 {
-	public class PlatformFluentValidator : AbstractValidator<Domain.Platform>
+	public class PlatformFluentValidator : AbstractValidator<DTO.Platform>
 	{
 		public PlatformFluentValidator()
 		{
-			RuleFor(p => p.Name)
+			RuleFor(p => p.PlatformName)
 				.NotEmpty()
 				.IsInEnum();
 		}

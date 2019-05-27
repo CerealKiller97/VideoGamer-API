@@ -2,7 +2,7 @@
 using FluentValidation;
 using SharedModels.DTO;
 
-namespace SharedModels.Fluent
+namespace SharedModels.Fluent.User
 {
 	public class RegisterFluentValidator : AbstractValidator<Register>
 	{
