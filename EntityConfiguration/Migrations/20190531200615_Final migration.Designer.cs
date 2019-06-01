@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EntityConfiguration.Migrations
 {
     [DbContext(typeof(VideoGamerDbContext))]
-    [Migration("20190523133107_FinalMigration")]
-    partial class FinalMigration
+    [Migration("20190531200615_Final migration")]
+    partial class Finalmigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {

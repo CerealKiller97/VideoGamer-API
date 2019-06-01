@@ -4,7 +4,7 @@ using Domain;
 using EntityConfiguration;
 using Microsoft.AspNetCore.Mvc;
 using SharedModels.DTO;
-using SharedModels.Fluent;
+using SharedModels.Fluent.User;
 using SharedModels.Formatters;
 
 namespace VideoGamer.Controllers

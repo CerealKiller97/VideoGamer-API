@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace EntityConfiguration.Migrations
 {
-    public partial class FinalMigration : Migration
+    public partial class Finalmigration : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
