@@ -52,8 +52,8 @@ namespace VideoGamer.Controllers
 				return UnprocessableEntity(ValidationFormatter.Format(valid));
 			}
 			
-			await _context.Users.AddAsync(new User
-			{
+			await _context.Users.AddAsync(new Domain.User
+            {
 				FirstName = obj.FirstName,
 				LastName  = obj.LastName,
 				Email     = obj.Email,

@@ -4,7 +4,12 @@ namespace Aplication.Exceptions
 {
   public class EntityNotFoundException : Exception
     {
-        public EntityNotFoundException(string message) : base($"{message} not found.")
+        public EntityNotFoundException(string entity) : base($"{entity} not found.")
+        {
+
+        }
+
+        public EntityNotFoundException()
         {
 
         }

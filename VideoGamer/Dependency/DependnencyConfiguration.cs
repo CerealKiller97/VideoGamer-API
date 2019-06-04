@@ -1,4 +1,6 @@
-﻿using EntityConfiguration;
+﻿using Aplication.Interfaces;
+using EFServices.Services;
+using EntityConfiguration;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -23,6 +25,7 @@ namespace VideoGamer.Dependency
 			{
 				config.UseSqlServer(_configuration.GetConnectionString("VideoGamer"));
 			});
+            services.AddTransient<IUserService, EFUserService>();
 		}
 	}
 }

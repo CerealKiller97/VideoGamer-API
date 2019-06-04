@@ -1,8 +1,9 @@
-﻿using SharedModels;
+﻿using Aplication.Searches;
+using SharedModels.DTO;
 
 namespace Aplication.Interfaces
 {
-    public interface IUserService : IService<SharedModels.DTO.Register, SharedModels.Fluent.User.RegisterFluentValidator, SharedModels.Fluent.User.RegisterFluentValidator>
+    public interface IUserService : IService<User, Register, Register, UserSearchRequest>
     {
 
     }

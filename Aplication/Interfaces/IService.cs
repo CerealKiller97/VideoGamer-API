@@ -1,10 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using Aplication.Pagination;
+using Domain;
 
 namespace Aplication.Interfaces
 {
-    public interface IService<ResponseDTO, InsertDTO, UpdateDTO>
+    public interface IService<ResponseDTO, InsertDTO, UpdateDTO, TSearch> where ResponseDTO : AbstractModel
     {
-        IEnumerable<ResponseDTO> All();
+        PagedResponse<ResponseDTO> All(TSearch request);
         ResponseDTO Find(object id);
         void Create(InsertDTO dto);
         void Update(UpdateDTO dto);
