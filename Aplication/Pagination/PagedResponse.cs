@@ -1,9 +1,10 @@
 ﻿using System.Collections.Generic;
 using Domain;
+using SharedModels.DTO;
 
 namespace Aplication.Pagination
 {
-    public class PagedResponse<T> where T : AbstractModel
+    public class PagedResponse<T> where T : BaseDTO
     {
         public IEnumerable<T> Data { get; set; }
         public int Total { get; set; }

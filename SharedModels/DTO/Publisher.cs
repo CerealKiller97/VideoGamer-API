@@ -2,7 +2,7 @@
 
 namespace SharedModels.DTO
 {
-	public class Publisher
+	public class Publisher : BaseDTO
 	{
 		public string Name { get; set; }
 		public string HQ { get; set; }

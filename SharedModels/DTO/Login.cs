@@ -1,6 +1,6 @@
 ﻿namespace SharedModels.DTO
 {
-	public class Login
+	public class Login : BaseDTO
 	{
 		public string Email { get; set; }
 		public string Password { get; set; }

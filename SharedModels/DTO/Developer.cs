@@ -2,7 +2,7 @@
 
 namespace SharedModels.DTO
 {
-	public class Developer
+	public class Developer : BaseDTO
 	{
 		public int Id { get; set; }
 		public string Name { get; set; }

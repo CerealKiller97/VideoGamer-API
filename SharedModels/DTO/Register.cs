@@ -1,6 +1,6 @@
 ﻿namespace SharedModels.DTO
 {
-	public class Register
+	public class Register : BaseDTO
 	{
 		public string FirstName { get; set; }
 		public string LastName { get; set; }	

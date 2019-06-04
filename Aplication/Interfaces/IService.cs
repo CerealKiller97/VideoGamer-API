@@ -1,9 +1,9 @@
 ﻿using Aplication.Pagination;
-using Domain;
+using SharedModels.DTO;
 
 namespace Aplication.Interfaces
 {
-    public interface IService<ResponseDTO, InsertDTO, UpdateDTO, TSearch> where ResponseDTO : AbstractModel
+    public interface IService<ResponseDTO, InsertDTO, UpdateDTO, TSearch> where ResponseDTO : BaseDTO
     {
         PagedResponse<ResponseDTO> All(TSearch request);
         ResponseDTO Find(object id);

@@ -3,7 +3,7 @@ using SharedModels.DTO;
 
 namespace Aplication.Interfaces
 {
-    public interface IUserService : IService<User, Register, Register, UserSearchRequest>
+    public interface IUserService : IService<User, Register, Register, UserSearchRequest> where User : BaseDTO
     {
 
     }

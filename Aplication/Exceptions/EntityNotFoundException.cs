@@ -8,7 +8,6 @@ namespace Aplication.Exceptions
         {
 
         }
-
         public EntityNotFoundException()
         {
 
