@@ -43,7 +43,7 @@ namespace EntityConfiguration
             {
                 if (entry.Entity is AbstractModel item &&
                     entry.State == EntityState.Added &&
-                    item.CreatedAt != default) item.CreatedAt = DateTime.UtcNow;
+                    item.CreatedAt != default) item.CreatedAt = DateTime.Now;
             }
             return base.SaveChanges();
         }

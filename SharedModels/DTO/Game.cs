@@ -13,9 +13,7 @@ namespace SharedModels.DTO
 		public PegiAgeRating AgeLabel { get; set; }
 		public DateTime ReleaseDate { get; set; }
 		public int UserId { get; set; }
-		public User User { get; set; }
 		public GameModes GameMode { get; set; }
-		public int? DeveloperId { get; set; }
-		public Developer Developer { get; set; }
+		public int DeveloperId { get; set; }
 	}
 }

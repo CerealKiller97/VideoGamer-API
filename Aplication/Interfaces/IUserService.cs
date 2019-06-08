@@ -3,8 +3,8 @@ using SharedModels.DTO;
 
 namespace Aplication.Interfaces
 {
-    public interface IUserService : IService<User, Register, Register, UserSearchRequest> where User : BaseDTO
+    public interface IUserService : IService<User, Register, UserSearchRequest> 
     {
-
+        
     }
 }

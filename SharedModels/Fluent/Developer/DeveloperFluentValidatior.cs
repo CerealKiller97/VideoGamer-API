@@ -2,17 +2,23 @@
 
 namespace SharedModels.Fluent.Developer
 {
-	public class DeveloperFluentValidatior : AbstractValidator<DTO.Developer>
+	public class DeveloperFluentValidatior : AbstractValidator<DTO.CreateDeveloperDTO>
 	{
 		public DeveloperFluentValidatior()
 		{
+
+            // CascadeMode = CascadeMode.StopOnFirstFailure;
+
 			RuleFor(d => d.Name)
 				.NotEmpty()
+                .WithMessage("Name is required.")
 				.MinimumLength(5)
 				.MaximumLength(200);
+			
 			RuleFor(d => d.HQ)
 				.NotEmpty()
-				.MinimumLength(5)
+                .WithMessage("HQ is required.")
+                .MinimumLength(5)
 				.MaximumLength(200);
 
 			RuleFor(d => d.Founded)

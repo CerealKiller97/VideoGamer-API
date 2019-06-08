@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using Domain;
 using SharedModels.DTO;
 
 namespace Aplication.Pagination

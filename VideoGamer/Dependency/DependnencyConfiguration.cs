@@ -26,6 +26,7 @@ namespace VideoGamer.Dependency
 				config.UseSqlServer(_configuration.GetConnectionString("VideoGamer"));
 			});
             services.AddTransient<IUserService, EFUserService>();
+            services.AddTransient<IDeveloperService, EFDeveloperService>();
 		}
 	}
 }

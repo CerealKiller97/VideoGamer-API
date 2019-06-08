@@ -1,11 +1,16 @@
-﻿using FluentValidation;
+﻿using System.Linq;
+using EntityConfiguration;
+using FluentValidation;
 
 namespace SharedModels.Fluent.Game
 {
 	public class GameFluentValidator : AbstractValidator<DTO.Game>
 	{
-		public GameFluentValidator()
+		private readonly VideoGamerDbContext _context;
+		public GameFluentValidator(VideoGamerDbContext context)
 		{
+			_context = context;
+			
 			RuleFor(g => g.Name)
 				.NotEmpty()
 				.MinimumLength(5)
@@ -17,13 +22,16 @@ namespace SharedModels.Fluent.Game
 				.MaximumLength(255);
 
 			RuleFor(g => g.DeveloperId)
-				.NotEmpty();
-			
-			RuleFor(g => g.Developer)
-				.NotEmpty();
+				.Must(ExistInDb)
+				.WithMessage("Developer doesn't exist.");
 			
 			RuleFor(g => g.ReleaseDate)
 				.NotEmpty();
+		}
+
+		private bool ExistInDb(int DeveloperId)
+		{
+			return _context.Developers.Any(d => d.Id == DeveloperId);
 		}
 	}
 }

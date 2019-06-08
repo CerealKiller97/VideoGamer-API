@@ -1,35 +1,33 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Aplication.Exceptions;
 using Aplication.Interfaces;
-using Microsoft.AspNetCore.Http;
+using Aplication.Searches;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using SharedModels.DTO;
 
 namespace VideoGamer.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class UsersController : ControllerBase
     {
-
         private readonly IUserService userService;
-
         public UsersController(IUserService userService) => this.userService = userService;
-
 
         // GET: api/Users
         [HttpGet]
-        public IEnumerable<string> Get()
+        public ActionResult<IEnumerable<User>> Get(UserSearchRequest request)
         {
-            return new string[] { "value1", "value2" };
+            return Ok(userService.All(request));
         }
 
         // GET: api/Users/5
         [HttpGet("{id}", Name = "Get")]
         [Produces("application/json")]
-        public IActionResult Get(int id)
+        public ActionResult<User> Get(int id)
         {
             try {
                 var user = userService.Find(id);
@@ -43,20 +41,55 @@ namespace VideoGamer.Controllers
 
         // POST: api/Users
         [HttpPost]
-        public void Post([FromBody] string value)
+        public IActionResult Post([FromBody] Register dto)
         {
+            try
+            {
+                userService.Create(dto);
+                return StatusCode(201);
+            }
+            catch (Exception e)
+            {
+                return StatusCode(500, "Server error please try again.");
+            }
         }
 
         // PUT: api/Users/5
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        public IActionResult Put(int id, [FromBody] Register dto)
         {
+            try
+            {
+                userService.Update(dto);
+                return NoContent();
+            }
+            catch (EntityNotFoundException e)
+            {
+                return NotFound(e.Message);
+            }
+            catch (Exception e)
+            {
+                return StatusCode(500, "Server error please try again.");
+            }
         }
 
         // DELETE: api/ApiWithActions/5
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public IActionResult Delete(int id)
         {
+            try
+            {
+                userService.Delete(id);
+                return NoContent();
+            }
+            catch (EntityNotFoundException e)
+            {
+                return NotFound(e.Message);
+            }
+            catch (Exception e)
+            {
+                return StatusCode(500, "Server error please try again.");
+            }
         }
     }
 }

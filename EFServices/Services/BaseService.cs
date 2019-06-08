@@ -2,32 +2,26 @@
 using Aplication.Searches;
 using EntityConfiguration;
 using System.Linq;
+using SharedModels.DTO;
 
 namespace EFServices
 {
-    abstract public class BaseService<T> where T : class
+    abstract public class BaseService<T, TSearch> where T : BaseDTO
     {
         protected readonly VideoGamerDbContext _context;
         public BaseService(VideoGamerDbContext context) => _context = context;
 
-        protected PagedResponse<T> GeneratePagedResponse(IQueryable query, BaseSearchRequest request)
+        protected PagedResponse<T> GeneratePagedResponse(IQueryable<T> query, BaseSearchRequest request)
         {
             if (request.PerPage != null)
             {
-                query = query.Take(request.PerPage);
-            }
-
-            if (request.Name != null)
-            {
-                var keyword = request.Name.ToLower();
-                query = query.Where(q => q.Name.ToLower().Contains(keyword));
+                query = query.Take(request.PerPage.Value);
             }
 
             //.Skip((pageNumber - 1) * perPage)
             //return new PagedResponse<T>();
             return null;
         }
-        abstract protected void BuildingQuery(BaseSearchRequest request);
-        abstract protected void EntityDatabaseAvailability(); 
+        abstract protected IQueryable<T> BuildingQuery(IQueryable<T> query, TSearch request);
     }
 }

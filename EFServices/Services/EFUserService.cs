@@ -10,7 +10,7 @@ using System.Linq;
 
 namespace EFServices.Services
 {
-    public class EFUserService : BaseService, IUserService
+    public class EFUserService : BaseService<User, UserSearchRequest>, IUserService
     {
         public EFUserService(VideoGamerDbContext context) : base(context)
         {
@@ -53,7 +53,12 @@ namespace EFServices.Services
         {
             return new PagedResponse<User>();
         }
-        
+
+        public PagedResponse<User> All(BaseSearchRequest request)
+        {
+            throw new System.NotImplementedException();
+        }
+
         public User Find(object id)
         {
             var user = _context.Users.Find(id);
@@ -92,14 +97,10 @@ namespace EFServices.Services
             _context.SaveChanges();
         }
 
-        protected override void BuildingQuery(BaseSearchRequest request)
-        {
-            
-        }
 
-        protected override void EntityDatabaseAvailability()
+        protected override IQueryable<User> BuildingQuery(IQueryable<User> query, UserSearchRequest request)
         {
-            
+            throw new System.NotImplementedException();
         }
     }
 }

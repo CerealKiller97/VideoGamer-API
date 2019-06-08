@@ -4,7 +4,7 @@ using SharedModels.Fluent.Game;
 
 namespace Aplication.Interfaces
 {
-    public interface IGameService: IService<Game, GameFluentValidator,GameFluentValidator, GameSearchRequest> where Game : BaseDTO
+    public interface IGameService : IService<Game, GameFluentValidator, GameSearchRequest>
     {
         
     }

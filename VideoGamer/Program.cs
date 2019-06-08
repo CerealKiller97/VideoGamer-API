@@ -11,8 +11,8 @@ namespace VideoGamer
 		}
 
 		public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
-				WebHost.CreateDefaultBuilder(args)
-						.UseKestrel(c => c.AddServerHeader = false)
-						.UseStartup<Startup>();
+			WebHost.CreateDefaultBuilder(args)
+				.UseKestrel(c => c.AddServerHeader = false)
+				.UseStartup<Startup>();
 	}
 }
