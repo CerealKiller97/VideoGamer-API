@@ -48,7 +48,7 @@ namespace VideoGamer.Controllers
                 userService.Create(dto);
                 return StatusCode(201);
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 return StatusCode(500, "Server error please try again.");
             }
@@ -67,7 +67,7 @@ namespace VideoGamer.Controllers
             {
                 return NotFound(e.Message);
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 return StatusCode(500, "Server error please try again.");
             }
@@ -86,7 +86,7 @@ namespace VideoGamer.Controllers
             {
                 return NotFound(e.Message);
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 return StatusCode(500, "Server error please try again.");
             }

@@ -1,13 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Aplication.Exceptions;
 using Aplication.Interfaces;
 using Aplication.Pagination;
 using Aplication.Searches;
-using FluentValidation;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SharedModels.DTO;
 using SharedModels.Fluent.Developer;
@@ -53,21 +48,12 @@ namespace VideoGamer.Controllers
         [HttpPost]
         public IActionResult Post([FromBody] CreateDeveloperDTO dto)
         {
+            
+
             try
             {
-                //var validator = new DeveloperFluentValidatior();
-                //var valid = await validator.ValidateAsync(dto);
-
-                //if (!valid.IsValid)
-                //{
-                //    return UnprocessableEntity(ValidationFormatter.Format(valid));
-                //}
                 developerService.Create(dto);
-                return Created("/Developers", dto);
-            }
-            catch (ValidationException e)
-            {
-                return UnprocessableEntity();
+                return Created("/developers", dto);
             }
             catch (Exception)
             {
@@ -111,7 +97,6 @@ namespace VideoGamer.Controllers
             }
             catch (Exception)
             {
-
                 return StatusCode(500, "Server error, please try later.");
             }
         }

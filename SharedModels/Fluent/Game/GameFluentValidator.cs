@@ -29,9 +29,6 @@ namespace SharedModels.Fluent.Game
 				.NotEmpty();
 		}
 
-		private bool ExistInDb(int DeveloperId)
-		{
-			return _context.Developers.Any(d => d.Id == DeveloperId);
-		}
+		private bool ExistInDb(int DeveloperId) => _context.Developers.Any(d => d.Id == DeveloperId);
 	}
 }

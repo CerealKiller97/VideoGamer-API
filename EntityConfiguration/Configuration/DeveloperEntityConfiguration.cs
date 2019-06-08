@@ -11,6 +11,13 @@ namespace EntityConfiguration.Configuration
 			// Primary key
 			builder.HasKey(d => d.Id);
 
+            // 
+            builder.HasIndex(d => d.Name)
+                .IsUnique(true);
+
+            builder.HasIndex(d => d.Website)
+                .IsUnique(true);
+
 			// Properties
 			builder.Property(d => d.Name)
 				.HasMaxLength(200)

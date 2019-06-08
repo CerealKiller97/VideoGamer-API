@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using Aplication.Exceptions;
 using Aplication.Interfaces;
@@ -7,6 +8,7 @@ using EntityConfiguration;
 using FluentValidation;
 using SharedModels.DTO;
 using SharedModels.Fluent.Developer;
+using SharedModels.Formatters;
 
 namespace EFServices.Services
 {
@@ -65,16 +67,18 @@ namespace EFServices.Services
             var validator = new DeveloperFluentValidatior();
             var valid = validator.Validate(dto);
 
+            var errors = ValidationFormatter.Format(valid);
+
             if (!valid.IsValid)
             {
-                throw new ValidationException(valid.Errors);
+                throw new ValidationException(errors.ToString());
             }
 
             _context.Developers.Add(new Domain.Developer
             {
                  Name = dto.Name,
                  HQ = dto.HQ,
-                 Founded = dto.Founded,
+                 Founded = (DateTime) dto.Founded,
                  Website = dto.Website
             });
 
@@ -84,8 +88,7 @@ namespace EFServices.Services
 
         public void Update(CreateDeveloperDTO dto)
         {
-            var validator = new DeveloperFluentValidatior();
-            var errors = validator.Validate(dto);
+           
         }
 
         public void Delete(object id)

@@ -9,12 +9,16 @@ namespace SharedModels.Fluent.User
 		{
 			RuleFor(u => u.Email)
 				.NotEmpty()
+				.WithMessage("Email address is required.")
 				.EmailAddress()
 				.MaximumLength(150);
 
 			RuleFor(u => u.Password)
 				.NotEmpty()
-				.MinimumLength(8);
+				.WithMessage("Password is required.")
+				.MinimumLength(8)
+				.WithMessage("Password must be at least 8 characters long.");
+
 		}
 	}
 }
