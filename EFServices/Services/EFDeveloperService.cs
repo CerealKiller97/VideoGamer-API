@@ -18,23 +18,6 @@ namespace EFServices.Services
         {
         }
 
-        protected override IQueryable<Developer> BuildingQuery(IQueryable<Developer> query, DeveloperSearchRequest request)
-        {
-            return null;
-            //if (request.Name != null)
-            //{
-            //    string keyword = request.Name.ToLower();
-            //    query = query.Where(q => q.Name.ToLower().Contains(keyword));
-            //}
-
-            //if (request.Founded != null)
-            //{
-                
-            //}
-
-            //return null;
-        }
-
         public PagedResponse<Developer> All(DeveloperSearchRequest request)
         {
             var query = _context.Developers.AsQueryable();
@@ -64,15 +47,15 @@ namespace EFServices.Services
 
         public void Create(CreateDeveloperDTO dto)
         {
-            var validator = new DeveloperFluentValidatior();
-            var valid = validator.Validate(dto);
+            //var validator = new DeveloperFluentValidatior();
+            //var valid = validator.Validate(dto);
 
-            var errors = ValidationFormatter.Format(valid);
+            //var errors = ValidationFormatter.Format(valid);
 
-            if (!valid.IsValid)
-            {
-                throw new ValidationException(errors.ToString());
-            }
+            //if (!valid.IsValid)
+            //{
+            //    throw new ValidationException(errors.ToString());
+            //}
 
             _context.Developers.Add(new Domain.Developer
             {

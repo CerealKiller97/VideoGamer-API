@@ -1,11 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using Domain;
+﻿using System.Collections.Generic;
 using Domain.Relations;
 
 namespace Domain
 {
-	public enum Platforms
+    public enum Platforms
 	{
 		PC,
 		PS4,
@@ -22,3 +20,5 @@ namespace Domain
 		public ICollection<GamePlatform> GamePlatforms { get; set; }
     }
 }
+
+// id 1 name: PC (Platforms)0

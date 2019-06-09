@@ -38,12 +38,14 @@ namespace EntityConfiguration
 		public override int SaveChanges()
         {
             var entries = ChangeTracker.Entries();
-
+  
             foreach (var entry in entries)
             {
-                if (entry.Entity is AbstractModel item &&
-                    entry.State == EntityState.Added &&
-                    item.CreatedAt != default) item.CreatedAt = DateTime.Now;
+                if (entry.Entity is AbstractModel item && entry.State == EntityState.Added && item.CreatedAt == default)
+                {
+                    item.CreatedAt = DateTime.Now;
+                }
+
             }
             return base.SaveChanges();
         }

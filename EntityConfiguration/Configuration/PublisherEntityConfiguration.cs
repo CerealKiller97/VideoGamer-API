@@ -14,8 +14,18 @@ namespace EntityConfiguration.Configuration
 			builder.Property(p => p.Id)
 				.ValueGeneratedOnAdd();
 
-			// Properties
-			builder.Property(p => p.Name)
+            // Indexes
+            builder.HasIndex(p => p.Name)
+                .IsUnique(true);
+
+            builder.HasIndex(p => p.ISIN)
+                .IsUnique(true);
+
+            builder.HasIndex(p => p.Website)
+                .IsUnique(true);
+
+            // Properties
+            builder.Property(p => p.Name)
 				.HasMaxLength(100)
 				.IsRequired(true);
 

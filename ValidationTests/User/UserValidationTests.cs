@@ -8,6 +8,7 @@ namespace VideoGamerTests.User
 {
     public class UserValidationTests
     {
+        // FIRSTNAME
         [Fact]
         public void DoesntReturnError_WhenFirstNameIsNotNull()
         {
@@ -60,6 +61,7 @@ namespace VideoGamerTests.User
             error.Should().HaveCount(0);
         }
         
+        // LASTNAME
         [Fact]
         public void DoesntReturnError_WhenLastNameIsNotNull()
         {
@@ -112,6 +114,44 @@ namespace VideoGamerTests.User
             error.Should().HaveCount(0);
         }
 
+        // EMAIL
+        [Fact]
+        public void ReturnsError_WhenEmailIsNull()
+        {
+            var user = new Register { Email = "" };
+            var validator = new RegisterFluentValidator();
+            var result = validator.Validate(user);
+
+            var error = result.Errors.Where(err => err.ErrorMessage == "Email address is required.");
+
+            error.Should().HaveCount(1);
+        }
+
+        [Fact]
+        public void ReturnsError_WhenEmailExistsInDatabase()
+        {
+            var user = new Register { Email = "test@test.com" };
+            var validator = new RegisterFluentValidator();
+            var result = validator.Validate(user);
+
+            var error = user.Email == "test@test.com";
+
+            error.Should().BeTrue();
+        }
+
+        [Fact]
+        public void DoesntReturnError_WhenEmailDoesntExistsInDatabase()
+        {
+            var user = new Register { Email = "test@test.com" };
+            var validator = new RegisterFluentValidator();
+            var result = validator.Validate(user);
+
+            var error = user.Email == "test@yahoo.com";
+
+            error.Should().BeFalse();
+        }
+
+
         [Fact]
         public void DoesntReturnError_WhenEmailIsValid()
         {
@@ -126,6 +166,20 @@ namespace VideoGamerTests.User
             error.Should().HaveCount(0);
         }
 
+        [Fact]
+        public void ReturnsError_WhenEmailContainsMaximumLengthOf255()
+        {
+            var user = new Register { Email = "bogdanovic.stefanbogdanovic.stefan@asdadsaoutlookasdadsaoutlookasdadsaoutlookasdadsaoutlookasdadsaoutlookasdadsaoutlookasdadsaoutlook.combogdanovic.stefan@asdadsaoutlookasdadsaoutlookasdadsaoutlookasdadsaoutlookasdadsaoutlookasdadsaoutlookasdadsaoutlook.com" };
+            
+            var validator = new RegisterFluentValidator();
+            
+            var result = validator.Validate(user);
+            
+            var error = result.Errors.Where(err => err.ErrorMessage == "Email address can't be longer than 255 characters.");
+            
+            error.Should().HaveCount(1);
+        }
+        
         [Fact]
         public void ReturnsError_WhenEmailIsNotValid()
         {

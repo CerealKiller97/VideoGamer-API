@@ -1,4 +1,6 @@
-﻿using System.Text.RegularExpressions;
+﻿using System.Linq;
+using System.Text.RegularExpressions;
+using EntityConfiguration;
 using FluentValidation;
 using SharedModels.DTO;
 
@@ -6,13 +8,17 @@ namespace SharedModels.Fluent.User
 {
 	public class RegisterFluentValidator : AbstractValidator<DTO.Register>
 	{
+		//private readonly VideoGamerDbContext _context;
 		public RegisterFluentValidator()
 		{
-			RuleFor(u => u.Email)
-				.NotEmpty()
-				.WithMessage("Email address is required.")
-				.MaximumLength(150)
-				.EmailAddress();
+            RuleFor(u => u.Email)
+                .NotEmpty()
+                .WithMessage("Email address is required.")
+                .MaximumLength(255)
+                .WithMessage("Email address can't be longer than 255 characters.")
+                .EmailAddress()
+                .WithMessage("Invalid email address.");
+				//.Must(BeUniqueEmailInDatabase);
 
 			RuleFor(u => u.FirstName)
 				.NotEmpty()
@@ -35,5 +41,10 @@ namespace SharedModels.Fluent.User
 				.WithMessage("Password is required.")
 				.MinimumLength(8);
 		}
+
+		//private bool BeUniqueEmailInDatabase(string email)
+			//email = email.ToLower();
+			//return true;
+			// return _context.Users.Any(u => u.Email.ToLower().Contains(email));
 	}
 }

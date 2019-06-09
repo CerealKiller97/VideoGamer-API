@@ -1,28 +1,65 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Linq;
 using Bogus;
 using Domain;
-using Microsoft.EntityFrameworkCore;
+using Domain.Relations;
 
 namespace EntityConfiguration.Seeders
 {
-	public class DatabaseSeeder
+    public class DatabaseSeeder
 	{
 		private readonly VideoGamerDbContext _context;
 
-		public DatabaseSeeder(VideoGamerDbContext context) => _context = context;
+        public DatabaseSeeder(VideoGamerDbContext context) => _context = context; 
 
-		public async Task Seed()
+		public void Seed()
 		{
-			await AddUsers();
-			await AddGames();
-			await AddDevelopers();
-			await AddGenres();
-			await AddPublishers();
+			AddUsers();
+			AddDevelopers();
+			AddGenres();
+			AddPublishers();
+            AddGames();
+            AddPlatforms();
+            AddGameGenre();
+            AddGamePlatform();
 		}
 
-		public async Task AddUsers()
+        public void AddGameGenre()
+        {
+            if (!_context.GameGenres.Any())
+            {
+                var testGameGenre = new Faker<GameGenre>()
+                    .RuleFor(g => g.GenreId, f => f.Random.Int(1, 50))
+                    .RuleFor(g => g.GameId, f => f.Random.Int(1, 50));
+
+                var data = testGameGenre.Generate(50);
+
+                foreach(var row in data)
+                {
+                    _context.GameGenres.Add(row);
+                }
+
+                _context.SaveChanges();
+            }
+        }
+        public void AddPlatforms()
+        {
+            if (! _context.Platforms.Any())
+            {
+                var values = Enum.GetValues(typeof(Platforms)).Cast<Platforms>().ToList();
+
+                foreach (var platform in values)
+                {
+                    _context.Platforms.Add(new Platform { Name = platform });
+                }
+
+                _context.SaveChanges();
+            }
+        }
+
+		public void AddUsers()
 		{
-			if (! await _context.Users.AnyAsync())
+			if (! _context.Users.Any())
 			{
 				var testUsers = new Faker<User>()
 					.RuleFor(u => u.FirstName, f => f.Name.FirstName())
@@ -30,49 +67,75 @@ namespace EntityConfiguration.Seeders
 					.RuleFor(u => u.Password, f => f.Internet.Password())
 					.RuleFor(u => u.Email, f => f.Internet.Email());
 
-				var users = testUsers.Generate(10);
+				var users = testUsers.Generate(50);
 
 				foreach (var user in users)
 				{
-					await _context.Users.AddAsync(user);
+					_context.Users.Add(user);
 				}
 
-				await _context.SaveChangesAsync();
+				 _context.SaveChanges();
 			}
 		}
 
-		public async Task AddGames()
+		public void AddGames()
 		{
-			if (! await _context.Games.AnyAsync())
+		    var s = Enum.GetNames(typeof(PegiAgeRating));
+
+            if (!  _context.Games.Any())
 			{
-				var testGames = new Faker<Game>()
-					.RuleFor(g => g.Name, f => f.Random.Word())
-					.RuleFor(g => g.Engine, f => f.Random.Words());
-			}
+                Array values = Enum.GetValues(typeof(PegiAgeRating));
+                Random random = new Random();
+                PegiAgeRating randomPegiAgeRating = (PegiAgeRating)values.GetValue(random.Next(values.Length));
+
+                Array gameModes = Enum.GetValues(typeof(GameModes));
+                Random random3 = new Random();
+                GameModes GameModes = (GameModes)values.GetValue(random.Next(values.Length));
+
+                var testGames = new Faker<Game>()
+                    .RuleFor(g => g.Name, f => f.Random.Words())
+                    .RuleFor(g => g.Engine, f => f.Random.Words())
+                    .RuleFor(g => g.AgeLabel, randomPegiAgeRating)
+                    .RuleFor(g => g.DeveloperId, f => f.Random.Int(1, 50))
+                    .RuleFor(g => g.PublisherId, f => f.Random.Int(1, 50))
+                    .RuleFor(g => g.GameMode, GameModes)
+                    .RuleFor(g => g.ReleaseDate, f => f.Date.Soon())
+                    .RuleFor(g => g.UserId, f => f.Random.Int(1, 50));
+
+                var games = testGames.Generate(50);
+
+                foreach (var game in games)
+                {
+                    _context.Games.Add(game);
+                }
+
+                _context.SaveChanges();
+            }
 		}
-		public async Task AddDevelopers()
+		public void AddDevelopers()
 		{
-			if (! await  _context.Developers.AnyAsync())
+			if (! _context.Developers.Any())
 			{
 				var testDeveloper = new Faker<Developer>()
-					.RuleFor(d => d.Name, f => f.Company.CompanyName())
+					.RuleFor(d => d.Name, f => f.Random.Words(6))
 					.RuleFor(d => d.HQ, f => f.Address.City())
 					.RuleFor(d => d.Founded, f => f.Date.Recent())
 					.RuleFor(d => d.Website, f => f.Internet.DomainName());
 
 				var developers = testDeveloper.Generate(50);
+
 				foreach (var developer in developers)
 				{
-					await _context.Developers.AddAsync(developer);
+					_context.Developers.Add(developer);
 				}
 
-				await _context.SaveChangesAsync();
+				 _context.SaveChanges();
 			}
 		}
 
-		public async Task AddPublishers()
+		public void AddPublishers()
 		{
-			if (! await _context.Publishers.AnyAsync())
+			if (!  _context.Publishers.Any())
 			{
 				var testPublisher = new Faker<Publisher>()
 					.RuleFor(d => d.ISIN, f => f.Random.Hash(12))
@@ -85,16 +148,16 @@ namespace EntityConfiguration.Seeders
 
 				foreach (var fakePublisher in fakePublishers)
 				{
-					_context.Publishers.AddAsync(fakePublisher);
+					 _context.Publishers.Add(fakePublisher);
 				}
 
-				_context.SaveChangesAsync();
+				 _context.SaveChanges();
 			}
 		}
 
-		public async Task AddGenres()
+		public void AddGenres()
 		{
-			if (! await  _context.Genres.AnyAsync())
+			if (! _context.Genres.Any())
 			{
 				var testGenre = new Faker<Genre>()
 					.RuleFor(g => g.Name, f => f.Random.Word());
@@ -103,11 +166,31 @@ namespace EntityConfiguration.Seeders
 
 				foreach (var fakeGenre in fakeGenres)
 				{
-					await _context.Genres.AddAsync(fakeGenre);
+					 _context.Genres.Add(fakeGenre);
 				}
 
-				await _context.SaveChangesAsync();
+				 _context.SaveChanges();
 			}
 		}
+
+        public void AddGamePlatform()
+        {
+            if (! _context.GamePlatforms.Any())
+            {
+                var gameGenreFaker = new Faker<GamePlatform>()
+                    .RuleFor(g => g.GameId, f => f.Random.Int(1, 50))
+                    .RuleFor(g => g.PlatformId, f => f.Random.Int(1, 8));
+
+                var data = gameGenreFaker.Generate(10);
+
+                foreach (var row in data)
+                {
+                    _context.GamePlatforms.Add(row);
+                }
+
+                _context.SaveChanges();
+
+            }
+        }
 	}
 }

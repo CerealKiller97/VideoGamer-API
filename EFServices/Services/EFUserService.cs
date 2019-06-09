@@ -97,11 +97,6 @@ namespace EFServices.Services
             _context.SaveChanges();
         }
 
-
-        protected override IQueryable<User> BuildingQuery(IQueryable<User> query, UserSearchRequest request)
-        {
-            throw new System.NotImplementedException();
-        }
     }
 }
 

@@ -4,14 +4,16 @@ using EntityConfiguration;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace EntityConfiguration.Migrations
 {
     [DbContext(typeof(VideoGamerDbContext))]
-    partial class VideoGamerDbContextModelSnapshot : ModelSnapshot
+    [Migration("20190609083111_Final migration v2")]
+    partial class Finalmigrationv2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

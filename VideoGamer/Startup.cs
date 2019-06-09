@@ -1,4 +1,7 @@
 ﻿using System.Text;
+using System.Threading.Tasks;
+using EntityConfiguration;
+using EntityConfiguration.Seeders;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -57,11 +60,14 @@ namespace VideoGamer
 		}
 
 
-		public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+		public void Configure(IApplicationBuilder app, IHostingEnvironment env, VideoGamerDbContext context)
 		{
-			if (env.IsDevelopment())
+            var DbSeeder = new DatabaseSeeder(context);
+            DbSeeder.Seed();
+
+            if (env.IsDevelopment())
 			{
-				app.UseDeveloperExceptionPage();
+                app.UseDeveloperExceptionPage();
 				app.UseCors(policy =>
 				{
 					policy.AllowAnyHeader();

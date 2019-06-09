@@ -22,6 +22,5 @@ namespace EFServices
             //return new PagedResponse<T>();
             return null;
         }
-        abstract protected IQueryable<T> BuildingQuery(IQueryable<T> query, TSearch request);
     }
 }

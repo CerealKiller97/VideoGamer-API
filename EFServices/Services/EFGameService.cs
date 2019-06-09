@@ -16,7 +16,9 @@ namespace EFServices.Services
 
         public PagedResponse<Game> All(GameSearchRequest request)
         {
-            throw new System.NotImplementedException();
+            // var query = _context.Games.AsQueryable();
+            // BuildingQuery(query, request)
+            return null;
         }
 
         public int Count()
@@ -44,9 +46,5 @@ namespace EFServices.Services
             throw new System.NotImplementedException();
         }
 
-        protected override IQueryable<Game> BuildingQuery(IQueryable<Game> query, GameSearchRequest request)
-        {
-            throw new System.NotImplementedException();
-        }
     }
 }
