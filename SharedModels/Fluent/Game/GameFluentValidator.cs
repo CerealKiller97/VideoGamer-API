@@ -1,10 +1,10 @@
 ﻿using System.Linq;
 using EntityConfiguration;
 using FluentValidation;
-
+using SharedModels.DTO.Game;
 namespace SharedModels.Fluent.Game
 {
-	public class GameFluentValidator : AbstractValidator<DTO.Game>
+	public class GameFluentValidator : AbstractValidator<CreateGameDTO>
 	{
 		private readonly VideoGamerDbContext _context;
 		public GameFluentValidator(VideoGamerDbContext context)

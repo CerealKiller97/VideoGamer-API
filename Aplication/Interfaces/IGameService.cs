@@ -1,10 +1,9 @@
 using Aplication.Searches;
-using SharedModels.DTO;
-using SharedModels.Fluent.Game;
+using SharedModels.DTO.Game;
 
 namespace Aplication.Interfaces
 {
-    public interface IGameService : IService<Game, GameFluentValidator, GameSearchRequest>
+    public interface IGameService : IService<Game, CreateGameDTO, GameSearchRequest>
     {
         
     }

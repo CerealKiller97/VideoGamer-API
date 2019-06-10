@@ -20,20 +20,13 @@ namespace EFServices.Services
 
         public void Create(Register dto)
         {
-            _context.Users.Add(new Domain.User
-            {
-                FirstName = dto.FirstName,
-                LastName = dto.LastName,
-                Email = dto.Email,
-                Password = dto.Password
-            });
+            Mapper.Initialize(cfg => cfg.CreateMap<Register, Domain.User>());
+
+            var DTO = Mapper.Map<Register, Domain.User>(dto);
+
+            _context.Users.Add(DTO);
 
             _context.SaveChanges();
-        }
-
-        public void Update(Register dto)
-        {
-            throw new System.NotImplementedException();
         }
 
         public void Delete(object id)
@@ -51,12 +44,13 @@ namespace EFServices.Services
 
         public PagedResponse<User> All(UserSearchRequest request)
         {
-            return new PagedResponse<User>();
-        }
 
-        public PagedResponse<User> All(BaseSearchRequest request)
-        {
-            throw new System.NotImplementedException();
+            var query = _context.Users.AsQueryable();
+
+            // GeneratePagedResponse(query, request);
+
+            return null;
+
         }
 
         public User Find(object id)
@@ -68,35 +62,31 @@ namespace EFServices.Services
                 throw new EntityNotFoundException("User");
             }
 
-            //Mapper.Initialize(cfg => cfg.CreateMap<user, User>());
+            Mapper.Initialize(cfg => cfg.CreateMap<Domain.User, User>());
 
-            return new User
-            {
-                Id = user.Id,
-                FirstName = user.FirstName,
-                LastName = user.LastName,
-                Email = user.Email,
-            };
+            var userDTO = Mapper.Map<Domain.User, User>(user);
+
+            return userDTO;
         }
 
-        public void Update(Register dto, object id)
+        public void Update(object id, Register dto)
         {
             var user = _context.Users.Find(id);
 
             if (user == null)
             {
-                throw new EntityNotFoundException("User"); 
+                throw new EntityNotFoundException("User");
             }
 
-            user.FirstName = dto.FirstName;
-            user.LastName = dto.LastName;
-            user.Email = dto.Email;
-            user.Password = dto.Password;
-            
+            // validation passed?
+
+            Mapper.Initialize(cfg => cfg.CreateMap<Register, Domain.User>());
+
+            user = Mapper.Map<Register, Domain.User>(dto); // ??
+
             _context.Users.Update(user);
             _context.SaveChanges();
         }
-
     }
 }
 

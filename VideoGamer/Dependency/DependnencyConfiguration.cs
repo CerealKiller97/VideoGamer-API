@@ -27,6 +27,8 @@ namespace VideoGamer.Dependency
 			});
             services.AddTransient<IUserService, EFUserService>();
             services.AddTransient<IDeveloperService, EFDeveloperService>();
-		}
-	}
+            services.AddTransient<IGameService, EFGameService>();
+
+        }
+    }
 }

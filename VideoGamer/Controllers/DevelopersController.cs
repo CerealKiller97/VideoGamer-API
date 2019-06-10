@@ -68,7 +68,7 @@ namespace VideoGamer.Controllers
         {
             try
             {
-                developerService.Update(dto);
+                developerService.Update(id, dto);
                 return NoContent();
             }
             catch (EntityNotFoundException e)

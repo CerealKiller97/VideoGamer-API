@@ -69,7 +69,7 @@ namespace EFServices.Services
 
         }
 
-        public void Update(CreateDeveloperDTO dto)
+        public void Update(object id, CreateDeveloperDTO dto)
         {
            
         }

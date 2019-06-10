@@ -1,7 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using Domain;
 
-namespace SharedModels.DTO
+namespace SharedModels.DTO.Game
 {
 	public class Game : BaseDTO
 	{
@@ -15,5 +16,6 @@ namespace SharedModels.DTO
 		public int UserId { get; set; }
 		public GameModes GameMode { get; set; }
 		public int DeveloperId { get; set; }
+        // IEnumerable<Genre> Genres { get; set; }
 	}
 }

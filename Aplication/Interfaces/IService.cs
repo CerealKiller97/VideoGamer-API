@@ -9,7 +9,7 @@ namespace Aplication.Interfaces
         PagedResponse<ResponseDTO> All(TSearch request);
         ResponseDTO Find(object id);
         void Create(InsertDTO dto);
-        void Update(InsertDTO dto);
+        void Update(object id,InsertDTO dto);
         void Delete(object id);
         int Count();
     }
