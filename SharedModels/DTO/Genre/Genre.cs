@@ -7,6 +7,6 @@ namespace SharedModels.DTO.Genre
     {
         public int Id { get; set; }
         public string Name { get; set; }
-        public IEnumerable<Game> Games { get; set; }
+        public IEnumerable<Game.Game> Games { get; set; }
     }
 }

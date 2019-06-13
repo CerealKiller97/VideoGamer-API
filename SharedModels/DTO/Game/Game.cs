@@ -15,7 +15,7 @@ namespace SharedModels.DTO.Game
 		public DateTime ReleaseDate { get; set; }
 		public int UserId { get; set; }
 		public GameModes GameMode { get; set; }
-		public int DeveloperId { get; set; }
+		public int? DeveloperId { get; set; }
         // IEnumerable<Genre> Genres { get; set; }
 	}
 }

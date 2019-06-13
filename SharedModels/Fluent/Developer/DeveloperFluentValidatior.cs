@@ -60,14 +60,12 @@ namespace SharedModels.Fluent.Developer
 		
         private bool BeUniqueName(string Name)
         {
-            Name = Name.ToLower();
-            return _context.Developers.Any(d => d.Name.ToLower().Contains(Name));
+            return !_context.Developers.Any(d => d.Name == Name);
         }
 
         private bool BeUniqueWebSite(string Website)
         {
-	        Website = Website.ToLower();
-	        return _context.Developers.Any(d => d.Website.ToLower().Contains(Website));
+	        return !_context.Developers.Any(d => d.Website == Website);
         }
     }
 }

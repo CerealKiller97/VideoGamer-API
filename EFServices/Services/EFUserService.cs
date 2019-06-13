@@ -4,9 +4,11 @@ using Aplication.Pagination;
 using Aplication.Searches;
 using AutoMapper;
 using EntityConfiguration;
+using Microsoft.EntityFrameworkCore;
 using SharedModels.DTO;
 using SharedModels.Fluent.User;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace EFServices.Services
 {
@@ -16,9 +18,9 @@ namespace EFServices.Services
         {
         }
 
-        public int Count() => _context.Users.Count();
+        public async Task<int> Count() => await _context.Users.CountAsync();
 
-        public void Create(Register dto)
+        public async Task Create(Register dto)
         {
             Mapper.Initialize(cfg => cfg.CreateMap<Register, Domain.User>());
 
@@ -29,7 +31,7 @@ namespace EFServices.Services
             _context.SaveChanges();
         }
 
-        public void Delete(object id)
+        public async Task Delete(int id)
         {
             var user = _context.Users.Find(id);
 
@@ -42,7 +44,7 @@ namespace EFServices.Services
             _context.SaveChanges();
         }
 
-        public PagedResponse<User> All(UserSearchRequest request)
+        public async Task<PagedResponse<User>> All(UserSearchRequest request)
         {
 
             var query = _context.Users.AsQueryable();
@@ -53,7 +55,7 @@ namespace EFServices.Services
 
         }
 
-        public User Find(object id)
+        public async Task<User> Find(int id)
         {
             var user = _context.Users.Find(id);
 
@@ -69,7 +71,7 @@ namespace EFServices.Services
             return userDTO;
         }
 
-        public void Update(object id, Register dto)
+        public async Task Update(int id, Register dto)
         {
             var user = _context.Users.Find(id);
 

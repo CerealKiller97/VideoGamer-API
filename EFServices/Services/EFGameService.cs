@@ -2,11 +2,10 @@ using Aplication.Exceptions;
 using Aplication.Interfaces;
 using Aplication.Pagination;
 using Aplication.Searches;
-using AutoMapper;
 using EntityConfiguration;
 using Microsoft.EntityFrameworkCore;
 using SharedModels.DTO.Game;
-using System.Linq;
+using System.Threading.Tasks;
 
 namespace EFServices.Services
 {
@@ -16,23 +15,24 @@ namespace EFServices.Services
         {
         }
 
-        public PagedResponse<Game> All(GameSearchRequest request)
+        public async Task<PagedResponse<Game>> All(GameSearchRequest request)
         {
             // var query = _context.Games.AsQueryable();
             // BuildingQuery(query, request)
             return null;
         }
 
-        public int Count() => _context.Games.Count();
+        public async Task<int> Count() => await _context.Games.CountAsync();
 
-        public void Create(CreateGameDTO dto)
+        public async Task Create(CreateGameDTO dto)
         {
             throw new System.NotImplementedException();
         }
 
-        public void Delete(object id)
+        public async Task Delete(int id)
         {
-            var game = _context.Games.Find(id);
+            var game = await _context.Games.FindAsync(id);
+
 
             if (game is null)
             {
@@ -44,24 +44,40 @@ namespace EFServices.Services
 
         }
 
-        public Game Find(object id)
+        public async Task<Game> Find(int id)
         {
-            var game = _context.Games
-                                .Include(g => g.GamePlatforms);
+            var game = await _context.Games
+                                .Include(g => g.GamePlatforms)
+                                .Include(g => g.Publisher)
+
+                                .FirstOrDefaultAsync(g => g.Id == id);
 
             if (game is null)
             {
                 throw new EntityNotFoundException("Game");
             }
 
-            Mapper.Initialize(cfg => cfg.CreateMap<Domain.Game, Game>());
-
-            var gameDTO = Mapper.Map<Game>(game);
-
-            return gameDTO;
+            return new Game
+            {
+                Id = game.Id,
+                AgeLabel = game.AgeLabel,
+                DeveloperId = game.DeveloperId,
+                Engine = game.Engine,
+                GameMode = game.GameMode,
+                Name = game.Name,
+                Publisher = new SharedModels.DTO.Publisher
+                {
+                    Name = game.Publisher.Name,
+                    Founded = game.Publisher.Founded,
+                    Website = game.Publisher.Website,
+                    HQ = game.Publisher.HQ,
+                    ISIN = game.Publisher.ISIN
+                },
+                PublisherId = game.PublisherId
+            };
         }
 
-        public void Update(object id, CreateGameDTO dto)
+        public async Task Update(int id, CreateGameDTO dto)
         {
             throw new System.NotImplementedException();
         }

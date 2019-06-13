@@ -1,13 +1,13 @@
 ﻿using System.Collections.Generic;
-using SharedModels.DTO;
 
 namespace Aplication.Pagination
 {
-    public class PagedResponse<T> where T : BaseDTO
+    public class PagedResponse<T>
     {
         public IEnumerable<T> Data { get; set; }
         public int Total { get; set; }
-        public int CurrentPage { get; set; } = 1;
+        public int Page { get; set; } = 1;
         public int PerPage { get; set; } = 10;
+        public int PagesCount { get; set; }
     }
 }

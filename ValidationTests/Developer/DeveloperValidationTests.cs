@@ -11,7 +11,7 @@ namespace ValidationTests.Developer
 {
     public class DeveloperValidationTests
     {
-//        private readonly VideoGamerDbContext _Context;
+        private readonly VideoGamerDbContext _Context;
 //
 //        [Fact]
 //         public void ReturnsError_WhenNameIsNull()
