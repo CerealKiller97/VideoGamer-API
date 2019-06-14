@@ -10,7 +10,10 @@ namespace Aplication.Helpers
         {
             public static PagedResponse<T> Paginate<T>(this IQueryable<T> query, int perPage, int currentPage)
             {
-                var result = query.Skip((currentPage - 1) * perPage).Take(perPage);
+                var result = query
+                                .Skip((currentPage - 1) * perPage)
+                                .Take(perPage);
+
                 int totalCount = query.Count();
                 int pagesCount = (int) Math.Ceiling((double) totalCount / perPage);
 

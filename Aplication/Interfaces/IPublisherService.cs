@@ -3,7 +3,7 @@ using SharedModels.DTO;
 
 namespace Aplication.Interfaces
 {
-    public interface IPublisherService : IService<Publisher,CreateDeveloperDTO, PublisherSearchRequest>
+    public interface IPublisherService : IService<Publisher, CreatePublisherDTO, PublisherSearchRequest>
     {
         
     }

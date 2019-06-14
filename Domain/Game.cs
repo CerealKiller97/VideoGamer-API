@@ -26,11 +26,6 @@ namespace Domain
         public User User { get; set; }
 		public GameModes GameMode { get; set; }
         public int? DeveloperId { get; set; }
-        public Developer Developer { get; set; }
+        public Developer Developer { get; set; } 
 	}
 }
-/**
- *
-	Operand type clash: int is incompatible with uniqueidentifier
-
- */

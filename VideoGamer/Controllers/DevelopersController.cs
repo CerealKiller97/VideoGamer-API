@@ -62,7 +62,7 @@ namespace VideoGamer.Controllers
 
             try {
                 await _developerService.Create(dto);
-                return Created("developers", new { Id = dto.Id });
+                return StatusCode(201);
             } catch(Exception e) {
                 return StatusCode(500, e.Message);
             }

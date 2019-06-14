@@ -1,14 +1,15 @@
-﻿using Aplication.Pagination;
-using Aplication.Searches;
+﻿using Aplication.Searches;
 using EntityConfiguration;
 using System.Linq;
-using SharedModels.DTO;
+using Domain;
 
 namespace EFServices
 {
-    abstract public class BaseService<T, TSearch> where T : BaseDTO
+    abstract public class BaseService<T, TSearch> where T : AbstractModel where TSearch : BaseSearchRequest
     {
         protected readonly VideoGamerDbContext _context;
         public BaseService(VideoGamerDbContext context) => _context = context;
+
+        protected abstract IQueryable<T> BuildQuery(IQueryable<T> query, TSearch request);
     }
 }

@@ -14,7 +14,7 @@ using SharedModels.DTO;
 namespace EFServices.Services
 {
     public class EFDeveloperService :
-        BaseService<Developer, DeveloperSearchRequest>, IDeveloperService
+        BaseService<Domain.Developer, DeveloperSearchRequest>, IDeveloperService
     {
         public EFDeveloperService(VideoGamerDbContext context) : base(context)
         {
@@ -25,20 +25,18 @@ namespace EFServices.Services
             var query = _context.Developers
                 .AsQueryable();
 
-            if (request.Name != null)
-            {
-                string keyword = request.Name.ToLower();
-                query = query.Where(q => q.Name.ToLower().Contains(keyword));
-            }
+            var buildedQuery = BuildQuery(query, request);
 
-            return await query.Select(dev => new Developer
+            //TODO: AutoMapper
+
+            return buildedQuery.Select(dev => new Developer
             {
                 Id = dev.Id,
                 Name = dev.Name,
                 Founded = dev.Founded,
                 HQ = dev.HQ,
                 Website = dev.Website
-            }).PaginateAsync(request.PerPage, request.Page);
+            }).Paginate(request.PerPage, request.Page);
         }
 
         public async Task<Developer> Find(int id)
@@ -60,7 +58,6 @@ namespace EFServices.Services
                 Founded = dev.Founded,
                 HQ = dev.HQ
             };
-
         }
 
         public async Task Create(CreateDeveloperDTO dto)
@@ -74,7 +71,6 @@ namespace EFServices.Services
             });
 
             await _context.SaveChangesAsync();
-
         }
 
         public async Task Update(int id, CreateDeveloperDTO dto)
@@ -131,5 +127,16 @@ namespace EFServices.Services
         }
 
         public async Task<int> Count() => await _context.Developers.CountAsync();
+
+        protected override IQueryable<Domain.Developer> BuildQuery(IQueryable<Domain.Developer> query, DeveloperSearchRequest request)
+        {
+            if (request.Name != null)
+            {
+                string keyword = request.Name.ToLower();
+                query = query.Where(q => q.Name.ToLower().Contains(keyword));
+            }
+
+            return query;
+        }
     }
 }

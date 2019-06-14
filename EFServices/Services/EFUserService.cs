@@ -6,13 +6,12 @@ using AutoMapper;
 using EntityConfiguration;
 using Microsoft.EntityFrameworkCore;
 using SharedModels.DTO;
-using SharedModels.Fluent.User;
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace EFServices.Services
 {
-    public class EFUserService : BaseService<User, UserSearchRequest>, IUserService
+    public class EFUserService : BaseService<Domain.User, UserSearchRequest>, IUserService
     {
         public EFUserService(VideoGamerDbContext context) : base(context)
         {
@@ -44,7 +43,7 @@ namespace EFServices.Services
             _context.SaveChanges();
         }
 
-        public async Task<PagedResponse<User>> All(UserSearchRequest request)
+        public async Task<PagedResponse<SharedModels.DTO.User>> All(UserSearchRequest request)
         {
 
             var query = _context.Users.AsQueryable();
@@ -55,18 +54,18 @@ namespace EFServices.Services
 
         }
 
-        public async Task<User> Find(int id)
+        public async Task<SharedModels.DTO.User> Find(int id)
         {
-            var user = _context.Users.Find(id);
+            var user = await _context.Users.FindAsync(id);
 
             if (user == null)
             {
                 throw new EntityNotFoundException("User");
             }
 
-            Mapper.Initialize(cfg => cfg.CreateMap<Domain.User, User>());
+            Mapper.Initialize(cfg => cfg.CreateMap<Domain.User, SharedModels.DTO.User>());
 
-            var userDTO = Mapper.Map<Domain.User, User>(user);
+            var userDTO = Mapper.Map<Domain.User, SharedModels.DTO.User>(user);
 
             return userDTO;
         }
@@ -88,6 +87,30 @@ namespace EFServices.Services
 
             _context.Users.Update(user);
             _context.SaveChanges();
+        }
+
+        public async Task<SharedModels.DTO.User> Login(Login dto)
+        {
+            var user = await _context.Users
+                 .Where(u => u.Email == dto.Email)
+                 .Where(u => u.Password == dto.Password)
+                 .FirstOrDefaultAsync();
+
+            if (user == null)
+            {
+                throw new EntityNotFoundException("User");
+            }
+
+            Mapper.Initialize(cfg => cfg.CreateMap<Domain.User, SharedModels.DTO.User>());
+
+            var userDTO = Mapper.Map<Domain.User, SharedModels.DTO.User>(user);
+
+            return userDTO;
+        }
+
+        protected override IQueryable<Domain.User> BuildQuery(IQueryable<Domain.User> query, UserSearchRequest request)
+        {
+            return null;
         }
     }
 }
