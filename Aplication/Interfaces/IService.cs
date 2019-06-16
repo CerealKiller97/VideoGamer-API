@@ -10,7 +10,7 @@ namespace Aplication.Interfaces
         Task<PagedResponse<ResponseDTO>> All(TSearch request);
         Task<ResponseDTO> Find(int id);
         Task Create(InsertDTO dto);
-        Task Update(int id,InsertDTO dto);
+        Task Update(int id, InsertDTO dto);
         Task Delete(int id);
         Task<int> Count();
     }

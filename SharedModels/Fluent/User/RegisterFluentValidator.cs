@@ -7,7 +7,7 @@ namespace SharedModels.Fluent.User
 {
 	public class RegisterFluentValidator : AbstractValidator<DTO.Register>
 	{
-		private readonly VideoGamerDbContext _context;
+		protected readonly VideoGamerDbContext _context;
 		public RegisterFluentValidator(VideoGamerDbContext context)
 		{
 			_context = context;
@@ -51,7 +51,7 @@ namespace SharedModels.Fluent.User
 				.WithMessage("Password must be at least 8 characters long.");
 		}
 
-		private bool BeUniqueEmailInDatabase(string email)
+		protected virtual bool BeUniqueEmailInDatabase(string email)
 		{
 			return !_context.Users.Any(u => u.Email ==email);
 		}

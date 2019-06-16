@@ -6,6 +6,7 @@ using Aplication.Searches;
 using AutoMapper;
 using EntityConfiguration;
 using Microsoft.EntityFrameworkCore;
+using PasswordHashing;
 using SharedModels.DTO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -14,14 +15,19 @@ namespace EFServices.Services
 {
 	public class EFUserService : BaseService<Domain.User, UserSearchRequest>, IUserService
     {
-		private IRegisterService _registerService;
+		private readonly IRegisterService _registerService;
+		private readonly IPasswordHasher _passwordHasher; 
 
-        public EFUserService(VideoGamerDbContext context, IRegisterService registerService) : base(context)
-        {
+		public EFUserService(VideoGamerDbContext context,
+			IRegisterService registerService,
+			IPasswordHasher passwordHasher
+		) : base(context)
+		{
 			_registerService = registerService;
-        }
+			_passwordHasher = passwordHasher;
+		}
 
-        public async Task<int> Count() => await _context.Users.CountAsync();
+		public async Task<int> Count() => await _context.Users.CountAsync();
 
         public async Task Create(Register dto)
         {
@@ -81,14 +87,29 @@ namespace EFServices.Services
                 throw new EntityNotFoundException("User");
             }
 
-            // validation passed?
+            if (user.FirstName != dto.FirstName)
+			{
+				user.FirstName = dto.FirstName;
+			}
 
-            Mapper.Initialize(cfg => cfg.CreateMap<Register, Domain.User>());
+			if (user.LastName != dto.LastName)
+			{
+				user.LastName = dto.LastName;
+			}
 
-            user = Mapper.Map<Register, Domain.User>(dto); // ??
+			if (user.Email != dto.Email)
+			{
+				user.Email = dto.Email;
+			}
 
-            _context.Users.Update(user);
-            _context.SaveChanges();
+			bool arePasswordSame = _passwordHasher.ValidatePassword(dto.Password, user.Password);
+			
+			if (!arePasswordSame)
+			{
+				user.Password = _passwordHasher.HashPassword(dto.Password);
+			}
+
+			await _context.SaveChangesAsync();
         }
 
         

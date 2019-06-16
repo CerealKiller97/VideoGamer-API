@@ -1,12 +1,16 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Threading.Tasks;
 using Aplication.Exceptions;
+using Aplication.Helpers;
 using Aplication.Interfaces;
+using Aplication.Pagination;
 using Aplication.Searches;
 using EntityConfiguration;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SharedModels.DTO;
+using SharedModels.Fluent.User;
+using SharedModels.Formatters;
 
 namespace VideoGamer.Controllers
 {
@@ -15,75 +19,73 @@ namespace VideoGamer.Controllers
     [ApiController]
     public class UsersController : ControllerBase
     {
-        private readonly IUserService userService;
+        private readonly IUserService _userService;
 		private readonly VideoGamerDbContext _context;
 
 		public UsersController(IUserService service, VideoGamerDbContext context)
 		{
-			 userService = service;
+			_userService = service;
 			_context = context;
 		}
 
         // GET: api/Users
         [HttpGet]
-        public ActionResult<IEnumerable<User>> Get([FromQuery] UserSearchRequest request)
+        public async Task<ActionResult<PagedResponse<User>>> Get([FromQuery] UserSearchRequest request)
         {
-            var users = userService.All(request);
+            var users = await _userService.All(request);
             return Ok(users);
         }
 
         // GET: api/Users/5
         [HttpGet("{id}")]
         [Produces("application/json")]
-        public ActionResult<User> Get(int id)
+        public async Task<ActionResult<User>> Get(int id)
         {
             try {
-                var user = userService.Find(id);
+                var user = await _userService.Find(id);
                 return Ok(user);
             } catch(EntityNotFoundException e) {
-                return NotFound(e.Message);
+                return NotFound(new { e.Message });
             } catch(Exception) {
-                return StatusCode(500, "Server error please try later.");
+                return StatusCode(500, new { ServerErrorResponse.Message });
             }
         }
 
         // PUT: api/Users/5
         [HttpPut("{id}")]
-        public IActionResult Put(int id, [FromBody] Register dto)
+		[Produces("application/json")]
+		public async Task<IActionResult> Put(int id, [FromBody] Register dto)
         {
-            try
-            {
-                userService.Update(id, dto);
+			var validator = new UserUpdateFluentValidator(_context, id);
+			var errors = await validator.ValidateAsync(dto);
+			if (!errors.IsValid)
+			{
+				return UnprocessableEntity(ValidationFormatter.Format(errors));
+			}
+
+			try {
+				await _userService.Update(id, dto);
                 return NoContent();
-            }
-            catch (EntityNotFoundException e)
-            {
-                return NotFound(e.Message);
-            }
-            catch (Exception)
-            {
-                return StatusCode(500, "Server error please try again.");
-            }
+            } catch (EntityNotFoundException e) {
+                return NotFound(new { e.Message });
+            } catch (Exception) {
+				return StatusCode(500, new { ServerErrorResponse.Message });
+			}
         }
 
         // DELETE: api/ApiWithActions/5
         [HttpDelete("{id}")]
-        public IActionResult Delete(int id)
+		[Produces("application/json")]
+		public async Task<IActionResult> Delete(int id)
         {
-            try
-            {
-                userService.Delete(id);
+            try {
+				await _userService.Delete(id);
                 return NoContent();
-            }
-            catch (EntityNotFoundException e)
-            {
-                return NotFound(e.Message);
-            }
-            catch (Exception)
-            {
-                return StatusCode(500, "Server error please try again.");
-            }
+            } catch (EntityNotFoundException e) {
+                return NotFound(new { e.Message });
+            } catch (Exception) {
+				return StatusCode(500, new { ServerErrorResponse.Message });
+			}
         }
-
-		}
+	}
 }
