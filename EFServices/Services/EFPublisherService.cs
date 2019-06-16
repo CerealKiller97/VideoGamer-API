@@ -80,17 +80,17 @@ namespace EFServices.Services
 
         public async Task<SharedModels.DTO.Publisher> Find(int id)
         {
-			var dev = await _context.Publishers
+			var pub = await _context.Publishers
 				.Include(d => d.Games)
 				.ThenInclude(g => g.Developer)
 				.FirstOrDefaultAsync(d => d.Id == id);
 
-			if (dev == null)
+			if (pub == null)
 			{
 				throw new EntityNotFoundException("publisher");
 			}
 
-			var games = dev.Games.Select(game => {
+			var games = pub.Games.Select(game => {
 				var gameMode = Enum.GetName(typeof(GameModes), game.GameMode);
 				var ageLabel = Enum.GetName(typeof(PegiAgeRating), game.AgeLabel);
 
@@ -108,11 +108,12 @@ namespace EFServices.Services
 
 			return new SharedModels.DTO.Publisher
 			{
-				Id = dev.Id,
-				Name = dev.Name,
-				Website = dev.Website,
-				Founded = dev.Founded,
-				HQ = dev.HQ,
+				Id = pub.Id,
+				Name = pub.Name,
+				ISIN = pub.ISIN,
+				Website = pub.Website,
+				Founded = pub.Founded,
+				HQ = pub.HQ,
 				Games = games
 			};
 		}
