@@ -42,8 +42,8 @@ namespace VideoGamer.Controllers
 				return Ok(genre);
 			} catch (EntityNotFoundException e) {
 				return NotFound(e.Message);
-			} catch (Exception e) {
-				return StatusCode(500, "Server error plase try later.");
+			} catch (Exception ) {
+				return StatusCode(500,new { message = "Server error plase try later." });
 			}
         }
 
@@ -54,8 +54,8 @@ namespace VideoGamer.Controllers
 			try {
 				await genreService.Create(dto);
 				return StatusCode(201);
-			} catch (Exception e) {
-				return StatusCode(500, "Server error please try later.");
+			} catch (Exception) {
+				return StatusCode(500, new { message = "Server error please try later." });
 			} 
         }
 
