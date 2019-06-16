@@ -15,6 +15,7 @@ using SharedModels.Formatters;
 
 namespace VideoGamer.Controllers
 {
+	[Produces("application/json")]
 	[Authorize]
     [Route("api/[controller]")]
     [ApiController]
@@ -30,6 +31,12 @@ namespace VideoGamer.Controllers
 		}
 
 		// GET: api/Genres
+		/// <summary>
+		/// Search and filter all genres
+		/// </summary>
+		/// <returns>PagedResponse of Genre</returns>
+		/// <response code="200"></response>
+		[ProducesResponseType(200)]
 		[HttpGet]
 		public async Task<ActionResult<PagedResponse<IEnumerable<Genre>>>> Get([FromQuery] GenreSearchRequest request)
         {
@@ -37,9 +44,18 @@ namespace VideoGamer.Controllers
 			return Ok(genres);
         }
 
-        // GET: api/Genres/5
-        [HttpGet("{id}")]
-		[Produces("application/json")]
+		// GET: api/Genres/5
+		/// <summary>
+		/// Find specific genre
+		/// </summary>
+		/// <returns>Wanted genre</returns>
+		/// <response code="200"></response>
+		/// <response code="404">Genre not found.</response>
+		/// <response code="500">Server error, please try later.</response>
+		[ProducesResponseType(200)]
+		[ProducesResponseType(404)]
+		[ProducesResponseType(500)]
+		[HttpGet("{id}")]
         public async Task<ActionResult<Genre>> Get(int id)
         {
             try {
@@ -52,9 +68,18 @@ namespace VideoGamer.Controllers
 			}
         }
 
-        // POST: api/Genres
-        [HttpPost]
-		[Produces("application/json")]
+		// POST: api/Genres
+		/// <summary>
+		/// Insert new genre
+		/// </summary>
+		/// <returns>Status code</returns>
+		/// <response code="201">Successfully inserted.</response>
+		/// <response code="422">Data is in invalid format.</response>
+		/// <response code="500">Server error, please try later.</response>
+		[ProducesResponseType(201)]
+		[ProducesResponseType(422)]
+		[ProducesResponseType(500)]
+		[HttpPost]
 		public async Task<IActionResult> Post([FromBody] CreateGenreDTO dto)
         {
 			var validator = new GenreFluentValidator(_context);
@@ -73,9 +98,20 @@ namespace VideoGamer.Controllers
 			} 
         }
 
-        // PUT: api/Genres/5
-        [HttpPut("{id}")]
-		[Produces("application/json")]
+		// PUT: api/Genres/5
+		/// <summary>
+		/// Update specific genre
+		/// </summary>
+		/// <returns>Status code</returns>
+		/// <response code="204">Successfully updated genre.</response>
+		/// <response code="404">Genre not found.</response>
+		/// <response code="422">Data is in invalid format.</response>
+		/// <response code="500">Server error, please try later.</response>
+		[ProducesResponseType(204)]
+		[ProducesResponseType(404)]
+		[ProducesResponseType(422)]
+		[ProducesResponseType(500)]
+		[HttpPut("{id}")]
         public async Task<IActionResult> Put(int id, [FromBody] CreateGenreDTO dto)
         {
 			var validator = new GenreUpdateFluentValidator(_context, id);
@@ -96,9 +132,18 @@ namespace VideoGamer.Controllers
 			}
 		}
 
-        // DELETE: api/ApiWithActions/5
-        [HttpDelete("{id}")]
-		[Produces("application/json")]
+		// DELETE: api/ApiWithActions/5
+		/// <summary>
+		/// Delete specific genre
+		/// </summary>
+		/// <returns>Status code</returns>
+		/// <response code="204">Successfully deleted genre.</response>
+		/// <response code="404">Genre not found.</response>
+		/// <response code="500">Server error, please try later.</response>
+		[ProducesResponseType(204)]
+		[ProducesResponseType(404)]
+		[ProducesResponseType(500)]
+		[HttpDelete("{id}")]
 		public async Task<IActionResult> Delete(int id)
         {
 			try {

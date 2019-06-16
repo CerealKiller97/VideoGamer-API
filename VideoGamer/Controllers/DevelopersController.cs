@@ -36,7 +36,6 @@ namespace VideoGamer.Controllers
 		/// </summary>
 		/// <returns>PagedResponse of Developer</returns>
 		/// <response code="200"></response>
-		/// 
 		[ProducesResponseType(200)]
 		[HttpGet]
         public async Task<ActionResult<PagedResponse<IEnumerable<Developer>>>> Get([FromQuery]DeveloperSearchRequest request)
