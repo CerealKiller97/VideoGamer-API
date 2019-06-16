@@ -1,4 +1,6 @@
-﻿using System.Linq;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using EntityConfiguration;
 using FluentValidation;
 using SharedModels.DTO.Game;
@@ -10,25 +12,75 @@ namespace SharedModels.Fluent.Game
 		public GameFluentValidator(VideoGamerDbContext context)
 		{
 			_context = context;
-			
+
+			CascadeMode = CascadeMode.StopOnFirstFailure;
+
 			RuleFor(g => g.Name)
 				.NotEmpty()
+				.WithMessage("Name is required.")
 				.MinimumLength(5)
-				.MaximumLength(255);
+				.WithMessage("Name must be at least 5 characters long.")
+				.MaximumLength(255)
+				.WithMessage("Name can't be longer than 255 characters.");
 
 			RuleFor(g => g.Engine)
 				.NotEmpty()
+				.WithMessage("Engine is required.")
 				.MinimumLength(5)
-				.MaximumLength(255);
+				.WithMessage("Engine must be at least 5 characters long.")
+				.MaximumLength(255)
+				.WithMessage("Engine can't be longer than 255 characters.");
+
+			RuleFor(g => g.AgeLabel)
+				.NotEmpty()
+				.WithMessage("Age label is required.")
+				.IsInEnum()
+				.WithMessage("Must be of the offered ones.");
+
+			RuleFor(g => g.ReleaseDate)
+				.NotEmpty()
+				.WithMessage("Release Date is required.")
+				.GreaterThan(DateTime.UnixEpoch)
+				.WithMessage("Release date must be greater than 1970.");
+
+			RuleFor(g => g.UserId)
+				.NotEmpty();
+
+			RuleFor(g => g.GameMode)
+				.NotEmpty()
+				.WithMessage("Game mode is required.")
+				.IsInEnum()
+				.WithMessage("Must be of the offered ones.");
 
 			RuleFor(g => g.DeveloperId)
+				.NotEmpty()
+				.WithMessage("Developer is required.")
 				.Must(ExistInDb)
 				.WithMessage("Developer doesn't exist.");
-			
-			RuleFor(g => g.ReleaseDate)
-				.NotEmpty();
+
+			RuleFor(g => g.Genres)
+				.NotEmpty()
+				.WithMessage("Genres are required.");
+
+			RuleFor(g => g.Platforms)
+				.NotEmpty()
+				.WithMessage("Platforms are required.");
+
+			RuleFor(g => g.Path)
+				.NotEmpty()
+				.WithMessage("Image is required.");
 		}
 
-		private bool ExistInDb(int DeveloperId) => _context.Developers.Any(d => d.Id == DeveloperId);
+		protected virtual bool ExistInDb(int DeveloperId) => _context.Developers.Any(d => d.Id == DeveloperId);
+
+		protected virtual bool ValidGenres(List<int> genres)
+		{
+			return genres.Count != 0;
+		}
+
+		protected virtual bool ValidPlatforms(List<int> platforms)
+		{
+			return platforms.Count != 0;
+		}
 	}
 }

@@ -1,24 +1,29 @@
 using Aplication.Exceptions;
+using Aplication.FileUpload;
 using Aplication.Helpers.MyComicList.Application.Helpers;
 using Aplication.Interfaces;
 using Aplication.Pagination;
 using Aplication.Searches;
-using Domain;
+using Domain.Relations;
 using EntityConfiguration;
 using Microsoft.EntityFrameworkCore;
 using SharedModels.DTO.Game;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace EFServices.Services
 {
-    public class EFGameService : BaseService<Domain.Game, GameSearchRequest>, IGameService
+	public class EFGameService : BaseService<Domain.Game, GameSearchRequest>, IGameService
     {
-        public EFGameService(VideoGamerDbContext context) : base(context)
+		private readonly IFileService _fileService;
+		public EFGameService(VideoGamerDbContext context, IFileService fileService) : base(context)
         {
-        }
+			_fileService = fileService;
 
-        public async Task<PagedResponse<SharedModels.DTO.Game.Game>> All(GameSearchRequest request) 
+		}
+
+		public async Task<PagedResponse<Game>> All(GameSearchRequest request) 
         {
             var query = _context.Games
                                     .Include(g => g.Publisher)
@@ -28,7 +33,8 @@ namespace EFServices.Services
             
             var buildedQuery = BuildQuery(query, request);
 
-            return query.Select(game => new SharedModels.DTO.Game.Game              {
+            return query.Select(game => new Game
+			{
                 Id = game.Id,
                 Name = game.Name,
                 Engine = game.Engine,
@@ -44,19 +50,56 @@ namespace EFServices.Services
 
         public async Task Create(CreateGameDTO dto)
         {
-            await _context.AddAsync(new Domain.Game
-            {
-                
-            });
+
+			string path = await _fileService.Upload(dto.Path);
+			
+			// VALIDATION FILE
+
+			List<GamePlatform> gamePlatforms = new List<GamePlatform>();
+			List<GameGenre> gameGenres = new List<GameGenre>();
+
+			foreach (int platform in dto.Platforms)
+			{
+				gamePlatforms.Add(new GamePlatform
+				{
+					PlatformId = platform
+				});
+			}
+
+			foreach (int genre in dto.Genres)
+			{
+				gameGenres.Add(new GameGenre
+				{
+					GenreId = genre
+				});
+			}
+
+			var game = new Domain.Game
+			{
+				Name = dto.Name,
+				Engine = dto.Engine,
+				DeveloperId = dto.DeveloperId,
+				PublisherId = dto.PublisherId,
+				ReleaseDate = dto.ReleaseDate,
+				UserId = dto.UserId,
+				GameMode = dto.GameMode,
+				AgeLabel = dto.AgeLabel,
+				GamePlatforms = gamePlatforms,
+				GameGenres = gameGenres,
+				Path = path
+			};
+
+
+			await _context.Games.AddAsync(game);
 
             await _context.SaveChangesAsync();
         }
 
         public async Task Delete(int id)
         {
-            var game = await _context.Games.FindAsync(id);
+            var game = await _context.Games.FirstOrDefaultAsync(g => g.Id == id);
 
-            if (game is null)
+            if (game == null)
             {
                 throw new EntityNotFoundException("Game");
             }

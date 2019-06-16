@@ -1,4 +1,5 @@
-﻿using Aplication.Interfaces;
+﻿using Aplication.FileUpload;
+using Aplication.Interfaces;
 using EFServices.Services;
 using EntityConfiguration;
 using Microsoft.AspNetCore.Mvc;
@@ -38,6 +39,8 @@ namespace VideoGamer.Dependency
 					.AddTransient<IRegisterService, EFRegisterService>()
 					.AddTransient<ILoginService, EFLoginService>()
 					.AddTransient<IPublisherService, EFPublisherService>();
+
+			services.AddSingleton<IFileService, FileUploadService>();
 
 			var section = _configuration.GetSection("Email");
 

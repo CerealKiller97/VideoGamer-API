@@ -7,6 +7,7 @@ using Aplication.Pagination;
 using Aplication.Searches;
 using EntityConfiguration;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SharedModels.DTO.Game;
 using SharedModels.Fluent.Game;
@@ -53,7 +54,7 @@ namespace VideoGamer.Controllers
 
         // POST: api/Games
         [HttpPost]
-        public async Task<IActionResult> Post([FromBody] CreateGameDTO dto)
+        public async Task<IActionResult> Post([FromForm] CreateGameDTO dto)
         {
             var validator = new GameFluentValidator(_context);
             var errors = await validator.ValidateAsync(dto);
@@ -66,14 +67,15 @@ namespace VideoGamer.Controllers
             try {
                 await _gamesService.Create(dto);
                 return StatusCode(201);
-            } catch (Exception) {
-                return StatusCode(500, "Server error, please try later.");
+            } catch (Exception e) {
+				var s = 2;
+                return StatusCode(500, e);
             }
         }
 
         // PUT: api/Games/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> Put(int id, [FromBody] CreateGameDTO dto)
+        public async Task<IActionResult> Put(int id, [FromForm] CreateGameDTO dto)
         {
 			var validator = new GameFluentValidator(_context);
 			var errors = await validator.ValidateAsync(dto);
