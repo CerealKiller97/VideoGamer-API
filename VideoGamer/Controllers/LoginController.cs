@@ -22,7 +22,20 @@ namespace VideoGamer.Controllers
         {
 			_loginService = service;
         }
-
+		/// <summary>
+		/// Login specific user
+		/// </summary>
+		/// <returns>Autentication token</returns>
+		/// <response code="200">Autentication token.</response>
+		/// <response code="400">Password is not valid.</response>
+		/// <response code="404">User not found.</response>
+		/// <response code="422">Data is in invalid format.</response>
+		/// <response code="500">Server error, please try later.</response>
+		[ProducesResponseType(200)]
+		[ProducesResponseType(400)]
+		[ProducesResponseType(404)]
+		[ProducesResponseType(422)]
+		[ProducesResponseType(500)]
 		[HttpPost]
 		[Route("")]
 		public async Task<IActionResult> Login(Login dto)
@@ -45,7 +58,7 @@ namespace VideoGamer.Controllers
 
 				return Ok(new { message = "You have succesfully logged in.", token });
 			} catch (EntityNotFoundException e) {
-				return BadRequest(new { message = e.Message });
+				return NotFound(new { message = e.Message });
 			} catch (PasswordNotValidException e) {
 				return BadRequest(new { message = e.Message });
 			} catch (Exception) {

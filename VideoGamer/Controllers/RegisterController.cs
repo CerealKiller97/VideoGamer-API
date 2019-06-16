@@ -27,7 +27,16 @@ namespace VideoGamer.Controllers
 			_context = context;
 			_emailService = emailService;
 		}
-
+		/// <summary>
+		/// Registe new user
+		/// </summary>
+		/// <returns>Status code</returns>
+		/// <response code="201">Successfully registered.</response>
+		/// <response code="422">Data is in invalid format.</response>
+		/// <response code="500">Server error, please try later.</response>
+		[ProducesResponseType(201)]
+		[ProducesResponseType(422)]
+		[ProducesResponseType(500)]
 		[HttpPost]
 		[Route("")]
 		public async Task<IActionResult> Register(Register dto)
