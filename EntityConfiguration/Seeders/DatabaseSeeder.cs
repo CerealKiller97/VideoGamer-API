@@ -101,7 +101,7 @@ namespace EntityConfiguration.Seeders
                     .RuleFor(g => g.GameMode, GameModes)
                     .RuleFor(g => g.ReleaseDate, f => f.Date.Soon())
                     .RuleFor(g => g.UserId, f => f.Random.Int(1, 50))
-                    .RuleFor(g => g.Path, f => f.Image.Image());
+                    .RuleFor(g => g.Path, f => f.Image.PicsumUrl());
 
                 var games = testGames.Generate(50);
 

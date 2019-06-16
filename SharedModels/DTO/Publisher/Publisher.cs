@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace SharedModels.DTO
 {
@@ -10,5 +11,6 @@ namespace SharedModels.DTO
 		public string ISIN { get; set; }
 		public DateTime Founded { get; set; }
 		public string Website { get; set; }
+		public IEnumerable<Game.Game> Games = new List<Game.Game>();
 	}
 }

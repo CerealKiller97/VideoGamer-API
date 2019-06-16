@@ -68,7 +68,6 @@ namespace VideoGamer.Controllers
             } catch(Exception) {
 				return StatusCode(500, new { ServerErrorResponse.Message });
 			}
-
         }
 
         // PUT: api/Developers/5

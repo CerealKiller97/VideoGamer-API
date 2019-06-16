@@ -23,7 +23,6 @@ namespace EFServices.Services
         public async Task<PagedResponse<SharedModels.DTO.Developer>> All(DeveloperSearchRequest request)
         {
             var query = _context.Developers
-                .Include(d => d.Games)
                 .AsQueryable();
 
             var buildedQuery = BuildQuery(query, request);
@@ -132,12 +131,7 @@ namespace EFServices.Services
                 developer.Website = dto.Website;
             }
 
-            // developer.UpdatedAt = DateTime.Now;
-
 			_context.Entry<Domain.Developer>(developer).State = EntityState.Modified;
-
-
-			//_context.Developers.Update(developer);
 
             await _context.SaveChangesAsync();
         }

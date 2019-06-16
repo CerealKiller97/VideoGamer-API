@@ -1,5 +1,4 @@
 ﻿using EntityConfiguration;
-using FluentValidation;
 using System.Linq;
 
 namespace SharedModels.Fluent.Developer
@@ -10,8 +9,6 @@ namespace SharedModels.Fluent.Developer
 		public DevelopUpdateFluentValidator(VideoGamerDbContext context, int id) : base(context)
 		{
 			_id = id;
-
-
 		}
 
 		protected override bool BeUniqueName(string Name)
