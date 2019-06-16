@@ -2,8 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Aplication.Exceptions;
+using Aplication.Interfaces;
+using Aplication.Pagination;
+using Aplication.Searches;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using SharedModels.DTO.Genre;
 
 namespace VideoGamer.Controllers
 {
@@ -11,24 +16,45 @@ namespace VideoGamer.Controllers
     [ApiController]
     public class GenresController : ControllerBase
     {
+		private readonly IGenreService genreService;
+
+		public GenresController(IGenreService service)
+		{
+			genreService = service;
+		}
         // GET: api/Genres
         [HttpGet]
-        public IEnumerable<string> Get()
+		public async Task<ActionResult<PagedResponse<IEnumerable<Genre>>>> Get([FromQuery] GenreSearchRequest request)
         {
-            return new string[] { "value1", "value2" };
+			var genres = await genreService.All(request);
+			return Ok(genres);
         }
 
         // GET: api/Genres/5
         [HttpGet("{id}")]
-        public string Get(int id)
+		[Produces("application/json")]
+        public async Task<ActionResult<Genre>> Get(int id)
         {
-            return "value";
+            try {
+				var genre = await genreService.Find(id);
+				return Ok(genre);
+			} catch (EntityNotFoundException e) {
+				return NotFound(e.Message);
+			} catch (Exception e) {
+				return StatusCode(500, "Server error plase try later.");
+			}
         }
 
         // POST: api/Genres
         [HttpPost]
-        public void Post([FromBody] string value)
+        public async Task<IActionResult> Post([FromBody] CreateGenreDTO dto)
         {
+			try {
+				await genreService.Create(dto);
+				return StatusCode(201);
+			} catch (Exception e) {
+				return StatusCode(500, "Server error please try later.");
+			} 
         }
 
         // PUT: api/Genres/5

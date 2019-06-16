@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Threading;
+using System.Threading.Tasks;
 using Domain;
 using Domain.Relations;
 using EntityConfiguration.Configuration;
@@ -35,10 +37,10 @@ namespace EntityConfiguration
             modelBuilder.ApplyConfiguration(new GameGenreEntityConfiguration());
         }
 
-		public override int SaveChanges()
+        public override int SaveChanges()
         {
             var entries = ChangeTracker.Entries();
-  
+
             foreach (var entry in entries)
             {
                 if (entry.Entity is AbstractModel item && entry.State == EntityState.Added && item.CreatedAt == default)
@@ -47,7 +49,41 @@ namespace EntityConfiguration
                 }
 
             }
+
             return base.SaveChanges();
+        }
+
+        public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
+        {
+            var entries = ChangeTracker.Entries();
+
+            foreach (var entry in entries)
+            {
+                if (entry.Entity is AbstractModel item && entry.State == EntityState.Added && item.CreatedAt == default)
+                {
+                    item.CreatedAt = DateTime.Now;
+                }
+
+            }
+            return base.SaveChangesAsync(cancellationToken);
+        }
+
+        public override Task<int> SaveChangesAsync(bool acceptAllChangesOnSuccess, CancellationToken cancellationToken = default)
+        {
+            var entries = ChangeTracker.Entries();
+
+            foreach (var entry in entries)
+            {
+                if (entry.Entity is AbstractModel item && entry.State == EntityState.Added && item.CreatedAt == default)
+                {
+                    item.CreatedAt = DateTime.Now;
+                } else if (entry.Entity is AbstractModel x && entry.State == EntityState.Modified)
+				{
+					x.UpdatedAt = DateTime.Now;
+				}
+
+            }
+            return base.SaveChangesAsync(acceptAllChangesOnSuccess, cancellationToken);
         }
     }
 }

@@ -18,9 +18,10 @@ namespace VideoGamer.Controllers
 
         // GET: api/Users
         [HttpGet]
-        public ActionResult<IEnumerable<User>> Get(UserSearchRequest request)
+        public ActionResult<IEnumerable<User>> Get([FromQuery] UserSearchRequest request)
         {
-            return Ok(userService.All(request));
+            var users = userService.All(request);
+            return Ok(users);
         }
 
         // GET: api/Users/5

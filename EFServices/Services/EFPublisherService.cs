@@ -83,7 +83,7 @@ namespace EFServices.Services
             };
         }
 
-        public Task Update(int id, CreateDeveloperDTO dto)
+        public async Task Update(int id, CreatePublisherDTO dto)
         {
             throw new System.NotImplementedException();
         }

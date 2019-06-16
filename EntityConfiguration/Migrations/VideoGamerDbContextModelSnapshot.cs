@@ -78,6 +78,10 @@ namespace EntityConfiguration.Migrations
                         .IsRequired()
                         .HasMaxLength(200);
 
+                    b.Property<string>("Path")
+                        .IsRequired()
+                        .HasMaxLength(255);
+
                     b.Property<int?>("PublisherId")
                         .IsRequired();
 

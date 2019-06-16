@@ -1,4 +1,5 @@
 ﻿using Aplication.Exceptions;
+using Aplication.Helpers.MyComicList.Application.Helpers;
 using Aplication.Interfaces;
 using Aplication.Pagination;
 using Aplication.Searches;
@@ -25,36 +26,12 @@ namespace EFServices.Services
 
             var DTO = Mapper.Map<Register, Domain.User>(dto);
 
-            _context.Users.Add(DTO);
+            await _context.Users.AddAsync(DTO);
 
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
         }
 
         public async Task Delete(int id)
-        {
-            var user = _context.Users.Find(id);
-
-            if (user == null)
-            {
-                throw new EntityNotFoundException("User");
-            }
-
-            _context.Users.Remove(user);
-            _context.SaveChanges();
-        }
-
-        public async Task<PagedResponse<SharedModels.DTO.User>> All(UserSearchRequest request)
-        {
-
-            var query = _context.Users.AsQueryable();
-
-            // GeneratePagedResponse(query, request);
-
-            return null;
-
-        }
-
-        public async Task<SharedModels.DTO.User> Find(int id)
         {
             var user = await _context.Users.FindAsync(id);
 
@@ -63,9 +40,37 @@ namespace EFServices.Services
                 throw new EntityNotFoundException("User");
             }
 
-            Mapper.Initialize(cfg => cfg.CreateMap<Domain.User, SharedModels.DTO.User>());
+            _context.Users.Remove(user);
+            await _context.SaveChangesAsync();
+        }
 
-            var userDTO = Mapper.Map<Domain.User, SharedModels.DTO.User>(user);
+        public async Task<PagedResponse<User>> All(UserSearchRequest request)
+        {
+
+            var query = _context.Users.AsQueryable();
+
+            return query.Select(user => new User
+            {
+                Id = user.Id,
+                Email = user.Email,
+                FirstName = user.FirstName,
+                LastName = user.LastName
+            }).Paginate(request.PerPage, request.Page);
+
+        }
+
+        public async Task<User> Find(int id)
+        {
+            var user = await _context.Users.FindAsync(id);
+
+            if (user == null)
+            {
+                throw new EntityNotFoundException("User");
+            }
+
+            Mapper.Initialize(cfg => cfg.CreateMap<Domain.User, User>());
+
+            var userDTO = Mapper.Map<Domain.User, User>(user);
 
             return userDTO;
         }
@@ -89,7 +94,7 @@ namespace EFServices.Services
             _context.SaveChanges();
         }
 
-        public async Task<SharedModels.DTO.User> Login(Login dto)
+        public async Task<User> Login(Login dto)
         {
             var user = await _context.Users
                  .Where(u => u.Email == dto.Email)
@@ -101,9 +106,9 @@ namespace EFServices.Services
                 throw new EntityNotFoundException("User");
             }
 
-            Mapper.Initialize(cfg => cfg.CreateMap<Domain.User, SharedModels.DTO.User>());
+            Mapper.Initialize(cfg => cfg.CreateMap<Domain.User, User>());
 
-            var userDTO = Mapper.Map<Domain.User, SharedModels.DTO.User>(user);
+            var userDTO = Mapper.Map<Domain.User, User>(user);
 
             return userDTO;
         }

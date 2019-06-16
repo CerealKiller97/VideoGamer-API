@@ -39,6 +39,10 @@ namespace EntityConfiguration.Configuration
 	            .HasConversion(new EnumToNumberConverter<GameModes, int>())
 	            .IsRequired(true);
 
+            builder.Property(g => g.Path)
+                .IsRequired(true)
+                .HasMaxLength(255);
+
 			// Relations
 
             builder.HasOne(g => g.Developer)

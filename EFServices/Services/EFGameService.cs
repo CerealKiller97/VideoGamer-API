@@ -32,17 +32,9 @@ namespace EFServices.Services
                 Id = game.Id,
                 Name = game.Name,
                 Engine = game.Engine,
-                Publisher = new SharedModels.DTO.Publisher
-                {
-                    Id = game.Publisher.Id,
-                    Name = game.Publisher.Name,
-                    Founded = game.Publisher.Founded,
-                    HQ = game.Publisher.HQ,
-                    ISIN = game.Publisher.ISIN,
-                    Website = game.Publisher.Website
-                },
-                AgeLabel = game.AgeLabel,
-                GameMode = game.GameMode,
+                PublisherName = game.Publisher.Name,
+                AgeLabel = game.AgeLabel.ToString(),
+                GameMode = game.GameMode.ToString(),
                 ReleaseDate = game.ReleaseDate
             }).Paginate(request.PerPage, request.Page);
 
@@ -88,20 +80,11 @@ namespace EFServices.Services
             return new SharedModels.DTO.Game.Game
             {
                 Id = game.Id,
-                AgeLabel = game.AgeLabel,
-                DeveloperId = game.DeveloperId,
+                AgeLabel = game.AgeLabel.ToString(),
                 Engine = game.Engine,
-                GameMode = game.GameMode,
+                GameMode = game.GameMode.ToString(),
                 Name = game.Name,
-                Publisher = new SharedModels.DTO.Publisher
-                {
-                    Name = game.Publisher.Name,
-                    Founded = game.Publisher.Founded,
-                    Website = game.Publisher.Website,
-                    HQ = game.Publisher.HQ,
-                    ISIN = game.Publisher.ISIN
-                },
-                PublisherId = game.PublisherId
+                PublisherName = game.Publisher.Name
             };
         }
 

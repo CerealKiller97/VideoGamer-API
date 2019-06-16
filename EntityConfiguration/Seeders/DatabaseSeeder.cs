@@ -86,11 +86,11 @@ namespace EntityConfiguration.Seeders
 			{
                 Array values = Enum.GetValues(typeof(PegiAgeRating));
                 Random random = new Random();
-                PegiAgeRating randomPegiAgeRating = (PegiAgeRating)values.GetValue(random.Next(values.Length));
+                PegiAgeRating randomPegiAgeRating = (PegiAgeRating) values.GetValue(random.Next(values.Length));
 
                 Array gameModes = Enum.GetValues(typeof(GameModes));
                 Random random3 = new Random();
-                GameModes GameModes = (GameModes)values.GetValue(random.Next(values.Length));
+                GameModes GameModes = (GameModes) gameModes.GetValue(random.Next(gameModes.Length));
 
                 var testGames = new Faker<Game>()
                     .RuleFor(g => g.Name, f => f.Random.Words())
@@ -100,7 +100,8 @@ namespace EntityConfiguration.Seeders
                     .RuleFor(g => g.PublisherId, f => f.Random.Int(1, 50))
                     .RuleFor(g => g.GameMode, GameModes)
                     .RuleFor(g => g.ReleaseDate, f => f.Date.Soon())
-                    .RuleFor(g => g.UserId, f => f.Random.Int(1, 50));
+                    .RuleFor(g => g.UserId, f => f.Random.Int(1, 50))
+                    .RuleFor(g => g.Path, f => f.Image.Image());
 
                 var games = testGames.Generate(50);
 
