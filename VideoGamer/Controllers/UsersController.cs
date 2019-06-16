@@ -1,11 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Aplication.Exceptions;
 using Aplication.Interfaces;
 using Aplication.Searches;
-using Microsoft.AspNetCore.Authorization;
+using EntityConfiguration;
 using Microsoft.AspNetCore.Mvc;
 using SharedModels.DTO;
+using SharedModels.Fluent.User;
+using SharedModels.Formatters;
 
 namespace VideoGamer.Controllers
 {
@@ -14,7 +17,13 @@ namespace VideoGamer.Controllers
     public class UsersController : ControllerBase
     {
         private readonly IUserService userService;
-        public UsersController(IUserService userService) => this.userService = userService;
+		private readonly VideoGamerDbContext _context;
+
+		public UsersController(IUserService service, VideoGamerDbContext context)
+		{
+			 userService = service;
+			_context = context;
+		}
 
         // GET: api/Users
         [HttpGet]
@@ -39,13 +48,21 @@ namespace VideoGamer.Controllers
             }
         }
 
+     
         // POST: api/Users
         [HttpPost]
-        public IActionResult Post([FromBody] Register dto)
+        public async Task<IActionResult> Post([FromBody] Register dto)
         {
-            try
+			var validator = new RegisterFluentValidator(_context);
+			var errors = await validator.ValidateAsync(dto);
+			if (!errors.IsValid)
+			{
+				return UnprocessableEntity(ValidationFormatter.Format(errors));
+			}
+
+			try
             {
-                userService.Create(dto);
+                await userService.Create(dto);
                 return StatusCode(201);
             }
             catch (FluentValidationCustomException e)
@@ -95,5 +112,30 @@ namespace VideoGamer.Controllers
                 return StatusCode(500, "Server error please try again.");
             }
         }
-    }
+
+		// LOGIN
+
+		[HttpPost]
+		[Route("login")]
+		public async Task<IActionResult> Login(Login dto)
+		{
+			var x = 1;
+			return Ok("string");
+			//try
+			//{
+			//	string token = await userService.Login(login);
+			//	return Ok(new { token });
+			//} catch (EntityNotFoundException e)
+			//{
+			//	return BadRequest(new { message = e.Message });
+			//} catch (PasswordNotValidException e)
+			//{
+			//	return BadRequest(new { message = e.Message });
+			//} catch (Exception)
+			//{
+			//	return StatusCode(500);
+			//}
+
+		}
+	}
 }

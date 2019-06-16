@@ -21,6 +21,7 @@
     <ProjectReference Include="..\Aplication\Aplication.csproj" />
     <ProjectReference Include="..\EFServices\EFServices.csproj" />
     <ProjectReference Include="..\EntityConfiguration\EntityConfiguration.csproj" />
+    <ProjectReference Include="..\PasswordHashing\PasswordHashing.csproj" />
   </ItemGroup>
 
 </Project>

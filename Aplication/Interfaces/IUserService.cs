@@ -4,8 +4,10 @@ using System.Threading.Tasks;
 
 namespace Aplication.Interfaces
 {
-    public interface IUserService : IService<User, Register, UserSearchRequest> 
-    {
-        Task<User> Login(Login dto);
+	public interface IUserService : IService<User, Register, UserSearchRequest>
+	{
+        Task<string> Login(Login dto);
+
+        //Task Register(Register dto);
     }
 }

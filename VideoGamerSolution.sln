@@ -19,7 +19,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Aplication", "Aplication\Ap
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EFServices", "EFServices\EFServices.csproj", "{749E85D1-5011-43C8-BAC2-E3EE1C32C47A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MVC", "MVC\MVC.csproj", "{D54DADF4-D285-47B4-8D72-EA8FAB0AD51B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PasswordHashing", "PasswordHashing\PasswordHashing.csproj", "{E9A0CD2F-E8EE-4455-8867-3F01A66A79EF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -59,10 +59,10 @@ Global
 		{749E85D1-5011-43C8-BAC2-E3EE1C32C47A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{749E85D1-5011-43C8-BAC2-E3EE1C32C47A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{749E85D1-5011-43C8-BAC2-E3EE1C32C47A}.Release|Any CPU.Build.0 = Release|Any CPU
-		{D54DADF4-D285-47B4-8D72-EA8FAB0AD51B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{D54DADF4-D285-47B4-8D72-EA8FAB0AD51B}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{D54DADF4-D285-47B4-8D72-EA8FAB0AD51B}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{D54DADF4-D285-47B4-8D72-EA8FAB0AD51B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E9A0CD2F-E8EE-4455-8867-3F01A66A79EF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E9A0CD2F-E8EE-4455-8867-3F01A66A79EF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E9A0CD2F-E8EE-4455-8867-3F01A66A79EF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E9A0CD2F-E8EE-4455-8867-3F01A66A79EF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

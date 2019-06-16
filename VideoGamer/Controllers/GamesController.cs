@@ -6,6 +6,7 @@ using Aplication.Interfaces;
 using Aplication.Pagination;
 using Aplication.Searches;
 using EntityConfiguration;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SharedModels.DTO.Game;
 using SharedModels.Fluent.Game;
@@ -13,6 +14,7 @@ using SharedModels.Formatters;
 
 namespace VideoGamer.Controllers
 {
+	[Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class GamesController : ControllerBase
@@ -64,7 +66,7 @@ namespace VideoGamer.Controllers
             try {
                 await _gamesService.Create(dto);
                 return StatusCode(201);
-            } catch (Exception e) {
+            } catch (Exception) {
                 return StatusCode(500, "Server error, please try later.");
             }
         }

@@ -8,17 +8,20 @@ namespace SharedModels.Fluent.User
 {
 	public class RegisterFluentValidator : AbstractValidator<DTO.Register>
 	{
-		//private readonly VideoGamerDbContext _context;
-		public RegisterFluentValidator()
+		private readonly VideoGamerDbContext _context;
+		public RegisterFluentValidator(VideoGamerDbContext context)
 		{
+			_context = context;
+
             RuleFor(u => u.Email)
                 .NotEmpty()
                 .WithMessage("Email address is required.")
                 .MaximumLength(255)
                 .WithMessage("Email address can't be longer than 255 characters.")
                 .EmailAddress()
-                .WithMessage("Invalid email address.");
-				//.Must(BeUniqueEmailInDatabase);
+                .WithMessage("Invalid email address.")
+				.Must(BeUniqueEmailInDatabase)
+				.WithMessage("Email address already exists.");
 
 			RuleFor(u => u.FirstName)
 				.NotEmpty()
@@ -42,9 +45,10 @@ namespace SharedModels.Fluent.User
 				.MinimumLength(8);
 		}
 
-		//private bool BeUniqueEmailInDatabase(string email)
-			//email = email.ToLower();
-			//return true;
-			// return _context.Users.Any(u => u.Email.ToLower().Contains(email));
+		private bool BeUniqueEmailInDatabase(string email)
+		{
+			return !_context.Users.Any(u => u.Email ==email);
+		}
+			
 	}
 }

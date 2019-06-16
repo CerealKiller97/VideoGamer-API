@@ -4,7 +4,7 @@ using Domain;
 
 namespace SharedModels.DTO.Game
 {
-	public class Game : BaseDTO
+	public class Game
 	{
 		public int Id { get; set; }		
 		public string Name { get; set; }

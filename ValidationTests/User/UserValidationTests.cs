@@ -1,4 +1,5 @@
 using System.Linq;
+using EntityConfiguration;
 using FluentAssertions;
 using SharedModels.DTO;
 using SharedModels.Fluent.User;
@@ -8,13 +9,20 @@ namespace VideoGamerTests.User
 {
     public class UserValidationTests
     {
-        // FIRSTNAME
-        [Fact]
+
+		private readonly VideoGamerDbContext _context;
+
+		public UserValidationTests(VideoGamerDbContext context)
+		{
+			_context = context;
+		}
+		// FIRSTNAME
+		[Fact]
         public void DoesntReturnError_WhenFirstNameIsNotNull()
         {
             var user = new Register { FirstName = "Stefan"};
 
-            var validator = new RegisterFluentValidator();
+            var validator = new RegisterFluentValidator(_context);
 
             var result = validator.Validate(user);
             var error = result.Errors.Where(err => err.ErrorMessage == "First name is required.");
@@ -27,7 +35,7 @@ namespace VideoGamerTests.User
         {
             var user = new Register { FirstName = ""};
 
-            var validator = new RegisterFluentValidator();
+            var validator = new RegisterFluentValidator(_context);
 
             var result = validator.Validate(user);
             var error = result.Errors.Where(err => err.ErrorMessage == "First name is required.");
@@ -40,7 +48,7 @@ namespace VideoGamerTests.User
         {
             var user = new Register { FirstName = "asdasda"};
 
-            var validator = new RegisterFluentValidator();
+            var validator = new RegisterFluentValidator(_context);
 
             var result = validator.Validate(user);
             var error = result.Errors.Where(err => err.ErrorMessage == "First name must start with capital letter.");
@@ -53,7 +61,7 @@ namespace VideoGamerTests.User
         {
             var user = new Register { FirstName = "Stefan"};
 
-            var validator = new RegisterFluentValidator();
+            var validator = new RegisterFluentValidator(_context);
 
             var result = validator.Validate(user);
             var error = result.Errors.Where(err => err.ErrorMessage == "First name must start with capital letter.");
@@ -67,7 +75,7 @@ namespace VideoGamerTests.User
         {
             var user = new Register { LastName = "Bogdanovic"};
 
-            var validator = new RegisterFluentValidator();
+            var validator = new RegisterFluentValidator(_context);
 
             var result = validator.Validate(user);
             var error = result.Errors.Where(err => err.ErrorMessage == "Last name is required.");
@@ -80,7 +88,7 @@ namespace VideoGamerTests.User
         {
             var user = new Register { LastName = ""};
 
-            var validator = new RegisterFluentValidator();
+            var validator = new RegisterFluentValidator(_context);
 
             var result = validator.Validate(user);
             var error = result.Errors.Where(err => err.ErrorMessage == "Last name is required.");
@@ -93,7 +101,7 @@ namespace VideoGamerTests.User
         {
             var user = new Register { LastName = "asdasda"};
 
-            var validator = new RegisterFluentValidator();
+            var validator = new RegisterFluentValidator(_context);
 
             var result = validator.Validate(user);
             var error = result.Errors.Where(err => err.ErrorMessage == "Last name must start with capital letter.");
@@ -106,7 +114,7 @@ namespace VideoGamerTests.User
         {
             var user = new Register { FirstName = "Stefan"};
 
-            var validator = new RegisterFluentValidator();
+            var validator = new RegisterFluentValidator(_context);
 
             var result = validator.Validate(user);
             var error = result.Errors.Where(err => err.ErrorMessage == "Last name must start with capital letter.");
@@ -119,7 +127,7 @@ namespace VideoGamerTests.User
         public void ReturnsError_WhenEmailIsNull()
         {
             var user = new Register { Email = "" };
-            var validator = new RegisterFluentValidator();
+            var validator = new RegisterFluentValidator(_context);
             var result = validator.Validate(user);
 
             var error = result.Errors.Where(err => err.ErrorMessage == "Email address is required.");
@@ -131,7 +139,7 @@ namespace VideoGamerTests.User
         public void ReturnsError_WhenEmailExistsInDatabase()
         {
             var user = new Register { Email = "test@test.com" };
-            var validator = new RegisterFluentValidator();
+            var validator = new RegisterFluentValidator(_context);
             var result = validator.Validate(user);
 
             var error = user.Email == "test@test.com";
@@ -143,7 +151,7 @@ namespace VideoGamerTests.User
         public void DoesntReturnError_WhenEmailDoesntExistsInDatabase()
         {
             var user = new Register { Email = "test@test.com" };
-            var validator = new RegisterFluentValidator();
+            var validator = new RegisterFluentValidator(_context);
             var result = validator.Validate(user);
 
             var error = user.Email == "test@yahoo.com";
@@ -157,7 +165,7 @@ namespace VideoGamerTests.User
         {
             var user = new Register { Email = "bogdanovic.stefan@outlook.com" };
             
-            var validator = new RegisterFluentValidator();
+            var validator = new RegisterFluentValidator(_context);
             
             var result = validator.Validate(user);
             
@@ -171,7 +179,7 @@ namespace VideoGamerTests.User
         {
             var user = new Register { Email = "bogdanovic.stefanbogdanovic.stefan@asdadsaoutlookasdadsaoutlookasdadsaoutlookasdadsaoutlookasdadsaoutlookasdadsaoutlookasdadsaoutlook.combogdanovic.stefan@asdadsaoutlookasdadsaoutlookasdadsaoutlookasdadsaoutlookasdadsaoutlookasdadsaoutlookasdadsaoutlook.com" };
             
-            var validator = new RegisterFluentValidator();
+            var validator = new RegisterFluentValidator(_context);
             
             var result = validator.Validate(user);
             
@@ -185,7 +193,7 @@ namespace VideoGamerTests.User
         {
             var user = new Register { Email = "bogdanovic.outlook.com" };
             
-            var validator = new RegisterFluentValidator();
+            var validator = new RegisterFluentValidator(_context);
             
             var result = validator.Validate(user);
             

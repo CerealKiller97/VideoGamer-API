@@ -5,6 +5,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using PasswordHashing;
+using System.Security.Cryptography;
 
 namespace VideoGamer.Dependency
 {
@@ -29,6 +31,7 @@ namespace VideoGamer.Dependency
 				    .AddTransient<IDeveloperService, EFDeveloperService>()
 			        .AddTransient<IGameService, EFGameService>()
 					.AddTransient<IGenreService, EFGenreService>();
+            services.AddSingleton<IPasswordHasher, PasswordHasher>((service) => new PasswordHasher(new RNGCryptoServiceProvider()));
         }
     }
 }

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 namespace SharedModels.DTO
 {
-    public class Developer : BaseDTO
+    public class Developer
     {
         public int Id { get; set; }
         public string Name { get; set; }

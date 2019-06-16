@@ -2,7 +2,7 @@ using System;
 
 namespace SharedModels.DTO
 {
-    public class CreateDeveloperDTO : BaseDTO
+    public class CreateDeveloperDTO 
     {
         public string Name { get; set; }
         public string HQ { get; set; }

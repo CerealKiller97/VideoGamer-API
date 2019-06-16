@@ -6,12 +6,14 @@ using Aplication.Exceptions;
 using Aplication.Interfaces;
 using Aplication.Pagination;
 using Aplication.Searches;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SharedModels.DTO.Genre;
 
 namespace VideoGamer.Controllers
 {
+	[Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class GenresController : ControllerBase

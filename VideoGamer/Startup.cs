@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using EntityConfiguration;
 using EntityConfiguration.Seeders;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -26,13 +27,10 @@ namespace VideoGamer
 
 		public void ConfigureServices(IServiceCollection services)
 		{
-			// configure strongly typed settings objects
-			var appSettingsSection = Configuration.GetSection("AppSettings");
-			// services.Configure<AppSettings>(appSettingsSection);
+            string key = Configuration.GetSection("JwtKey").Value; 
 
-			// configure jwt authentication
-			// var appSettings = appSettingsSection.Get<AppSettings>();
-			// var key = Encoding.ASCII.GetBytes(appSettings.Secret);
+			byte[] keyBytes = Encoding.ASCII.GetBytes(key);
+
 			services.AddAuthentication(x =>
 				{
 					x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -45,18 +43,13 @@ namespace VideoGamer
 					x.TokenValidationParameters = new TokenValidationParameters
 					{
 						ValidateIssuerSigningKey = true,
-						// IssuerSigningKey = new SymmetricSecurityKey(key),
+						IssuerSigningKey = new SymmetricSecurityKey(keyBytes),
 						ValidateIssuer = false,
-						ValidateAudience = false
+						ValidateAudience = false,
 					};
 				});
 			
 			DependencyConfiguration.Configure(services);
-			services.AddSession(options =>
-			{
-				options.Cookie.HttpOnly = true;
-				options.Cookie.IsEssential = true;
-			});
 		}
 
 
@@ -78,6 +71,7 @@ namespace VideoGamer
 			{
 				app.UseHsts();
 			}
+			app.UseAuthentication();
 
 			app.UseHttpsRedirection();
 			app.UseMvc();

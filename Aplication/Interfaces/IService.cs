@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace Aplication.Interfaces
 {
-    public interface IService<ResponseDTO, InsertDTO, TSearch> where ResponseDTO : BaseDTO
+    public interface IService<ResponseDTO, InsertDTO, TSearch>
     {
         Task<PagedResponse<ResponseDTO>> All(TSearch request);
         Task<ResponseDTO> Find(int id);

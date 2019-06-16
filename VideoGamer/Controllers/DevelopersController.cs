@@ -6,6 +6,7 @@ using Aplication.Interfaces;
 using Aplication.Pagination;
 using Aplication.Searches;
 using EntityConfiguration;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SharedModels.DTO;
 using SharedModels.Fluent.Developer;
@@ -13,6 +14,7 @@ using SharedModels.Formatters;
 
 namespace VideoGamer.Controllers
 {
+	[Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class DevelopersController : ControllerBase
