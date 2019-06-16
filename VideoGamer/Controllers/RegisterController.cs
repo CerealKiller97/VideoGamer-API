@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using SharedModels.DTO;
 using SharedModels.Fluent.User;
 using SharedModels.Formatters;
+using VideoGamer.Mailer;
 
 namespace VideoGamer.Controllers
 {
@@ -17,11 +18,13 @@ namespace VideoGamer.Controllers
     {
 		private readonly IRegisterService _registerService;
 		private readonly VideoGamerDbContext _context;
+		private readonly IEmailService _emailService;
 
-		public RegisterController(IRegisterService registerService, VideoGamerDbContext context)
+		public RegisterController(IRegisterService registerService, VideoGamerDbContext context, IEmailService emailService) 
 		{
 			_registerService = registerService;
 			_context = context;
+			_emailService = emailService;
 		}
 
 		[HttpPost]
@@ -38,6 +41,10 @@ namespace VideoGamer.Controllers
 			try
 			{
 				var user = await _registerService.Register(dto);
+				_emailService.Body = "You have succcessfully registered.";
+				_emailService.Subject = "Registration mail";
+				_emailService.ToEmail = user.Email;
+				_emailService.Send();
 				//EMAIL
 				return StatusCode(201);
 			} catch (Exception) {

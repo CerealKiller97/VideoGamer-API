@@ -1,8 +1,6 @@
 ﻿using System.Text;
-using System.Threading.Tasks;
 using EntityConfiguration;
 using EntityConfiguration.Seeders;
-using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -48,7 +46,21 @@ namespace VideoGamer
 						ValidateAudience = false,
 					};
 				});
-			
+
+			// TODO: HTTP ONLY cookie flag
+
+		//	services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+		//	.AddJwtBearer(options => {
+		//	options.Events = new JwtBearerEvents
+		//	{
+		//		OnMessageReceived = context =>
+		//		{
+		//			context.Token = context.Request.Cookies["CookieName"];
+		//			return Task.CompletedTask;
+		//		}
+		//	};
+		//});
+
 			DependencyConfiguration.Configure(services);
 		}
 

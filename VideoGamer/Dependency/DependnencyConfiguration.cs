@@ -6,7 +6,9 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using PasswordHashing;
+using System;
 using System.Security.Cryptography;
+using VideoGamer.Mailer;
 
 namespace VideoGamer.Dependency
 {
@@ -23,10 +25,12 @@ namespace VideoGamer.Dependency
 		{
 			services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 			services.AddCors();
+
 			services.AddDbContext<VideoGamerDbContext>(config =>
 			{
 				config.UseSqlServer(_configuration.GetConnectionString("VideoGamer"));
 			});
+
             services.AddTransient<IUserService, EFUserService>()
 				    .AddTransient<IDeveloperService, EFDeveloperService>()
 			        .AddTransient<IGameService, EFGameService>()
@@ -34,7 +38,19 @@ namespace VideoGamer.Dependency
 					.AddTransient<IRegisterService, EFRegisterService>()
 					.AddTransient<ILoginService, EFLoginService>();
 
-            services.AddSingleton<IPasswordHasher, PasswordHasher>((service) => new PasswordHasher(new RNGCryptoServiceProvider()));
+			var section = _configuration.GetSection("Email");
+
+			var sender = new SmtpEmailService(
+				section["host"], 
+				Int32.Parse(section["port"]),
+				section["fromaddress"],
+				section["password"]
+			);
+
+			services.AddSingleton<IEmailService>(sender);
+
+			services.AddSingleton
+				<IPasswordHasher, PasswordHasher>((service) => new PasswordHasher(new RNGCryptoServiceProvider()));
         }
     }
 }

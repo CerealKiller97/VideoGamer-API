@@ -73,14 +73,39 @@ namespace VideoGamer.Controllers
 
         // PUT: api/Games/5
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        public async Task<IActionResult> Put(int id, [FromBody] CreateGameDTO dto)
         {
-        }
+			var validator = new GameFluentValidator(_context);
+			var errors = await validator.ValidateAsync(dto);
+
+			if (!errors.IsValid)
+			{
+				return UnprocessableEntity(ValidationFormatter.Format(errors));
+			}
+
+			try {
+				await _gamesService.Update(id, dto);
+				return NoContent();
+			} catch (EntityNotFoundException e) {
+				return NotFound(new { message = e.Message });
+			} catch (Exception) {
+				return StatusCode(500, new { message = "Server error, please try later." });
+			}
+		}
 
         // DELETE: api/ApiWithActions/5
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public async Task<IActionResult> Delete(int id)
         {
-        }
+			try
+			{
+				await _gamesService.Delete(id);
+				return NoContent();
+			} catch (EntityNotFoundException e) {
+				return NotFound(new { message = e.Message });
+			} catch (Exception) {
+				return StatusCode(500, new { message = "Server error, please try later." });
+			}
+		}
     }
 }
