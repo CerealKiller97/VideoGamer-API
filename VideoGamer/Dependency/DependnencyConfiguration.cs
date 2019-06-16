@@ -36,7 +36,8 @@ namespace VideoGamer.Dependency
 			        .AddTransient<IGameService, EFGameService>()
 					.AddTransient<IGenreService, EFGenreService>()
 					.AddTransient<IRegisterService, EFRegisterService>()
-					.AddTransient<ILoginService, EFLoginService>();
+					.AddTransient<ILoginService, EFLoginService>()
+					.AddTransient<IPublisherService, EFPublisherService>();
 
 			var section = _configuration.GetSection("Email");
 

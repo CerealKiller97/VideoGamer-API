@@ -46,9 +46,9 @@ namespace VideoGamer.Controllers
                 return Ok(developer);
             } catch (EntityNotFoundException e) {
                 return NotFound(e.Message);
-            } catch (Exception ex) {
-                return StatusCode(500, ex);
-            }
+            } catch (Exception) {
+				return StatusCode(500, new { ServerErrorResponse.Message });
+			}
         }
 
         // POST: api/Developers
@@ -65,14 +65,15 @@ namespace VideoGamer.Controllers
             try {
                 await _developerService.Create(dto);
                 return StatusCode(201);
-            } catch(Exception e) {
-                return StatusCode(500, e.Message);
-            }
+            } catch(Exception) {
+				return StatusCode(500, new { ServerErrorResponse.Message });
+			}
 
         }
 
         // PUT: api/Developers/5
         [HttpPut("{id}")]
+		[Produces("application/json")]
         public async Task<IActionResult> Put(int id, [FromBody] CreateDeveloperDTO dto)
         {
 			var validator = new DevelopUpdateFluentValidator(_context, id);
@@ -87,9 +88,9 @@ namespace VideoGamer.Controllers
                 return NoContent();
             } catch (EntityNotFoundException e) {
                 return NotFound(e.Message);
-            } catch (Exception e) {
-                return StatusCode(500, e.Message);
-            }
+            } catch (Exception) {
+				return StatusCode(500, new { ServerErrorResponse.Message });
+			}
         }
 
         // DELETE: api/ApiWithActions/5
@@ -103,8 +104,8 @@ namespace VideoGamer.Controllers
             } catch (EntityNotFoundException e) {
                 return NotFound(e.Message);
             } catch (Exception) {
-                return StatusCode(500, "Server error, please try later.");
-            }
+				return StatusCode(500, new { ServerErrorResponse.Message });
+			}
         }
     }
 }
