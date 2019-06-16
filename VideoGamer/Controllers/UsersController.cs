@@ -1,17 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using Aplication.Exceptions;
 using Aplication.Interfaces;
 using Aplication.Searches;
 using EntityConfiguration;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SharedModels.DTO;
-using SharedModels.Fluent.User;
-using SharedModels.Formatters;
 
 namespace VideoGamer.Controllers
 {
+	[Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class UsersController : ControllerBase
@@ -34,7 +33,7 @@ namespace VideoGamer.Controllers
         }
 
         // GET: api/Users/5
-        [HttpGet("{id}", Name = "Get")]
+        [HttpGet("{id}")]
         [Produces("application/json")]
         public ActionResult<User> Get(int id)
         {
@@ -45,33 +44,6 @@ namespace VideoGamer.Controllers
                 return NotFound(e.Message);
             } catch(Exception) {
                 return StatusCode(500, "Server error please try later.");
-            }
-        }
-
-     
-        // POST: api/Users
-        [HttpPost]
-        public async Task<IActionResult> Post([FromBody] Register dto)
-        {
-			var validator = new RegisterFluentValidator(_context);
-			var errors = await validator.ValidateAsync(dto);
-			if (!errors.IsValid)
-			{
-				return UnprocessableEntity(ValidationFormatter.Format(errors));
-			}
-
-			try
-            {
-                await userService.Create(dto);
-                return StatusCode(201);
-            }
-            catch (FluentValidationCustomException e)
-            {
-                return UnprocessableEntity(e.Message);
-            }
-            catch (Exception)
-            {
-                return StatusCode(500, "Server error please try again.");
             }
         }
 
@@ -113,29 +85,5 @@ namespace VideoGamer.Controllers
             }
         }
 
-		// LOGIN
-
-		[HttpPost]
-		[Route("login")]
-		public async Task<IActionResult> Login(Login dto)
-		{
-			var x = 1;
-			return Ok("string");
-			//try
-			//{
-			//	string token = await userService.Login(login);
-			//	return Ok(new { token });
-			//} catch (EntityNotFoundException e)
-			//{
-			//	return BadRequest(new { message = e.Message });
-			//} catch (PasswordNotValidException e)
-			//{
-			//	return BadRequest(new { message = e.Message });
-			//} catch (Exception)
-			//{
-			//	return StatusCode(500);
-			//}
-
 		}
-	}
 }

@@ -75,14 +75,14 @@ namespace VideoGamer.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> Put(int id, [FromBody] CreateDeveloperDTO dto)
         {
-            //var validator = new DeveloperFluentValidatior(_context);
-            //var errors = await validator.ValidateAsync(dto);
-            //if (!errors.IsValid)
-            //{
-            //    return UnprocessableEntity(ValidationFormatter.Format(errors));
-            //}
+			var validator = new DevelopUpdateFluentValidator(_context, id);
+			var errors = await validator.ValidateAsync(dto);
+			if (!errors.IsValid)
+			{
+				return UnprocessableEntity(ValidationFormatter.Format(errors));
+			}
 
-            try {
+			try {
                 await _developerService.Update(id, dto);
                 return NoContent();
             } catch (EntityNotFoundException e) {

@@ -30,7 +30,10 @@ namespace VideoGamer.Dependency
             services.AddTransient<IUserService, EFUserService>()
 				    .AddTransient<IDeveloperService, EFDeveloperService>()
 			        .AddTransient<IGameService, EFGameService>()
-					.AddTransient<IGenreService, EFGenreService>();
+					.AddTransient<IGenreService, EFGenreService>()
+					.AddTransient<IRegisterService, EFRegisterService>()
+					.AddTransient<ILoginService, EFLoginService>();
+
             services.AddSingleton<IPasswordHasher, PasswordHasher>((service) => new PasswordHasher(new RNGCryptoServiceProvider()));
         }
     }

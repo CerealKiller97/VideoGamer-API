@@ -8,20 +8,20 @@ namespace SharedModels.Fluent.Developer
 {
 	public class DeveloperFluentValidatior : AbstractValidator<DTO.CreateDeveloperDTO>
 	{
-        private readonly VideoGamerDbContext _context;
+        protected readonly VideoGamerDbContext _context;
 		public DeveloperFluentValidatior(VideoGamerDbContext context)
 		{
             _context = context;
 
             CascadeMode = CascadeMode.StopOnFirstFailure;
 
-            RuleFor(d => d.Name)
-                .NotEmpty()
-                .WithMessage("Name is required.")
-                .MinimumLength(5)
-                .WithMessage("Name must be at least 5 characters long.")
-                .MaximumLength(200)
-                .WithMessage("Name can't be longer than 200 characters long.")
+			RuleFor(d => d.Name)
+				.NotEmpty()
+				.WithMessage("Name is required.")
+				.MinimumLength(5)
+				.WithMessage("Name must be at least 5 characters long.")
+				.MaximumLength(200)
+				.WithMessage("Name can't be longer than 200 characters long.")
                 .Must(BeUniqueName)
                 .WithMessage("Name already exists.");
 			
@@ -51,19 +51,19 @@ namespace SharedModels.Fluent.Developer
 				.WithMessage("Website already exists.");
 		}
 
-		private bool BeValidDate(DateTime dateTime)
+		protected virtual bool BeValidDate(DateTime dateTime)
 		{
 			return dateTime != null ?
 				!dateTime.Equals(default)
                 :false;
 		}
 		
-        private bool BeUniqueName(string Name)
+        protected virtual bool BeUniqueName(string Name)
         {
             return !_context.Developers.Any(d => d.Name == Name);
         }
 
-        private bool BeUniqueWebSite(string Website)
+		protected virtual bool BeUniqueWebSite(string Website)
         {
 	        return !_context.Developers.Any(d => d.Website == Website);
         }

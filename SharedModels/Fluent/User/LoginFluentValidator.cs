@@ -3,7 +3,7 @@ using SharedModels.DTO;
 
 namespace SharedModels.Fluent.User
 {
-	public class LoginFluentValidator : AbstractValidator<DTO.Login>
+	public class LoginFluentValidator : AbstractValidator<Login>
 	{
 		public LoginFluentValidator()
 		{
