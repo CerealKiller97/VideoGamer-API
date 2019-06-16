@@ -34,7 +34,7 @@ namespace VideoGamer.Controllers
 		/// <summary>
 		/// Search and filter all developers
 		/// </summary>
-		/// <returns>PagedResponse of Developer</returns>
+		/// <returns>PagedResponse of Developers</returns>
 		/// <response code="200"></response>
 		[ProducesResponseType(200)]
 		[HttpGet]

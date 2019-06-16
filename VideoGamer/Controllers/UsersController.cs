@@ -14,6 +14,7 @@ using SharedModels.Formatters;
 
 namespace VideoGamer.Controllers
 {
+	[Produces("application/json")]
 	[Authorize]
     [Route("api/[controller]")]
     [ApiController]
@@ -28,17 +29,32 @@ namespace VideoGamer.Controllers
 			_context = context;
 		}
 
-        // GET: api/Users
-        [HttpGet]
+		// GET: api/Users
+		/// <summary>
+		/// Search and filter all users
+		/// </summary>
+		/// <returns>PagedResponse of Users</returns>
+		/// <response code="200"></response>
+		[ProducesResponseType(200)]
+		[HttpGet]
         public async Task<ActionResult<PagedResponse<User>>> Get([FromQuery] UserSearchRequest request)
         {
             var users = await _userService.All(request);
             return Ok(users);
         }
 
-        // GET: api/Users/5
-        [HttpGet("{id}")]
-        [Produces("application/json")]
+		// GET: api/Users/5
+		/// <summary>
+		/// Find specific user
+		/// </summary>
+		/// <returns>Wanted user</returns>
+		/// <response code="200"></response>
+		/// <response code="404">User not found.</response>
+		/// <response code="500">Server error, please try later.</response>
+		[ProducesResponseType(200)]
+		[ProducesResponseType(404)]
+		[ProducesResponseType(500)]
+		[HttpGet("{id}")]
         public async Task<ActionResult<User>> Get(int id)
         {
             try {
@@ -51,9 +67,20 @@ namespace VideoGamer.Controllers
             }
         }
 
-        // PUT: api/Users/5
-        [HttpPut("{id}")]
-		[Produces("application/json")]
+		// PUT: api/Users/5
+		/// <summary>
+		/// Update specific user
+		/// </summary>
+		/// <returns>Status code</returns>
+		/// <response code="204">Successfully updated user.</response>
+		/// <response code="404">User not found.</response>
+		/// <response code="422">Data is in invalid format.</response>
+		/// <response code="500">Server error, please try later.</response>
+		[ProducesResponseType(204)]
+		[ProducesResponseType(404)]
+		[ProducesResponseType(422)]
+		[ProducesResponseType(500)]
+		[HttpPut("{id}")]
 		public async Task<IActionResult> Put(int id, [FromBody] Register dto)
         {
 			var validator = new UserUpdateFluentValidator(_context, id);
@@ -73,9 +100,18 @@ namespace VideoGamer.Controllers
 			}
         }
 
-        // DELETE: api/ApiWithActions/5
-        [HttpDelete("{id}")]
-		[Produces("application/json")]
+		// DELETE: api/ApiWithActions/5
+		/// <summary>
+		/// Delete specific user
+		/// </summary>
+		/// <returns>Status code</returns>
+		/// <response code="204">Successfully deleted user.</response>
+		/// <response code="404">User not found.</response>
+		/// <response code="500">Server error, please try later.</response>
+		[ProducesResponseType(204)]
+		[ProducesResponseType(404)]
+		[ProducesResponseType(500)]
+		[HttpDelete("{id}")]
 		public async Task<IActionResult> Delete(int id)
         {
             try {
