@@ -131,7 +131,7 @@ namespace EFServices.Services
                 developer.Website = dto.Website;
             }
 
-			_context.Entry<Domain.Developer>(developer).State = EntityState.Modified;
+			_context.Entry(developer).State = EntityState.Modified;
 
             await _context.SaveChangesAsync();
         }

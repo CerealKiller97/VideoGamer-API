@@ -5,7 +5,6 @@ using Aplication.Helpers.MyComicList.Application.Helpers;
 using Aplication.Interfaces;
 using Aplication.Pagination;
 using Aplication.Searches;
-using Domain;
 using EntityConfiguration;
 using Microsoft.EntityFrameworkCore;
 using SharedModels.DTO.Genre;
@@ -18,13 +17,13 @@ namespace EFServices.Services
 		{
 		}
 
-		public async Task<PagedResponse<SharedModels.DTO.Genre.Genre>> All(GenreSearchRequest request)
+		public async Task<PagedResponse<Genre>> All(GenreSearchRequest request)
 		{
 			var query = _context.Genres.AsQueryable();
 
 			var buildedQuery = BuildQuery(query, request);
 
-			return buildedQuery.Select(genre => new SharedModels.DTO.Genre.Genre
+			return buildedQuery.Select(genre => new Genre
 			{
 				Id = genre.Id,
 				Name = genre.Name
@@ -46,7 +45,7 @@ namespace EFServices.Services
 
 		public async Task Delete(int id)
 		{
-			var genre = await _context.Genres.FindAsync(id);
+			var genre = await _context.Genres.FirstOrDefaultAsync(g => g.Id == id);
 
 			if (genre == null)
 			{
@@ -57,16 +56,16 @@ namespace EFServices.Services
 			await _context.SaveChangesAsync();
 		}
 
-		public async Task<SharedModels.DTO.Genre.Genre> Find(int id)
+		public async Task<Genre> Find(int id)
 		{
-			var genre = await _context.Genres.FindAsync(id);
+			var genre = await _context.Genres.FirstOrDefaultAsync(g => g.Id == id);
 
 			if (genre == null)
 			{
 				throw new EntityNotFoundException("Genre");
 			}
 
-			return new SharedModels.DTO.Genre.Genre
+			return new Genre
 			{
 				Id = genre.Id,
 				Name = genre.Name
@@ -75,13 +74,19 @@ namespace EFServices.Services
 
 		public async Task Update(int id, CreateGenreDTO dto)
 		{
-			var genre = await _context.Genres.FindAsync(id);
+			var genre = await _context.Genres.FirstOrDefaultAsync(g => g.Id == id);
 
 			if (genre == null)
 			{
 				throw new EntityNotFoundException("Genre");
 			}
 
+			if (genre.Name != dto.Name)
+			{
+				genre.Name = dto.Name;
+			}
+
+			_context.Entry(genre).State = EntityState.Modified;
 
 			await _context.SaveChangesAsync();
 		}

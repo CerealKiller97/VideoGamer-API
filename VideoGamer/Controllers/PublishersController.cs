@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Aplication.Exceptions;
+using Aplication.Helpers;
 using Aplication.Interfaces;
 using Aplication.Pagination;
 using Aplication.Searches;

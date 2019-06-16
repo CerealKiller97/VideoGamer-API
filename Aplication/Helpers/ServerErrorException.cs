@@ -1,4 +1,4 @@
-﻿namespace Aplication.Exceptions
+﻿namespace Aplication.Helpers
 {
 	public static class ServerErrorResponse
 	{

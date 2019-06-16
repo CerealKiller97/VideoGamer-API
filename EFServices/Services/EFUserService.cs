@@ -6,11 +6,9 @@ using Aplication.Searches;
 using AutoMapper;
 using EntityConfiguration;
 using Microsoft.EntityFrameworkCore;
-using PasswordHashing;
 using SharedModels.DTO;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.Extensions.Configuration;
 
 namespace EFServices.Services
 {
@@ -32,9 +30,9 @@ namespace EFServices.Services
 
         public async Task Delete(int id)
         {
-            var user = await _context.Users.FindAsync(id);
+			var user = await _context.Users.FirstOrDefaultAsync(u => u.Id == id);
 
-            if (user == null)
+			if (user == null)
             {
                 throw new EntityNotFoundException("User");
             }
@@ -60,7 +58,7 @@ namespace EFServices.Services
 
         public async Task<User> Find(int id)
         {
-            var user = await _context.Users.FindAsync(id);
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.Id == id);
 
             if (user == null)
             {
@@ -76,7 +74,7 @@ namespace EFServices.Services
 
         public async Task Update(int id, Register dto)
         {
-            var user = await _context.Users.FindAsync(id);
+			var user = await _context.Users.FirstOrDefaultAsync(u => u.Id == id);
 
             if (user == null)
             {

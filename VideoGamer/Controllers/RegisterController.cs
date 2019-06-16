@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+using Aplication.Helpers;
 using Aplication.Interfaces;
 using EntityConfiguration;
 using Microsoft.AspNetCore.Authorization;
@@ -38,8 +39,7 @@ namespace VideoGamer.Controllers
 				return UnprocessableEntity(ValidationFormatter.Format(errors));
 			}
 
-			try
-			{
+			try {
 				var user = await _registerService.Register(dto);
 				_emailService.Body = "You have succcessfully registered.";
 				_emailService.Subject = "Registration mail";
@@ -48,8 +48,7 @@ namespace VideoGamer.Controllers
 				//EMAIL
 				return StatusCode(201);
 			} catch (Exception) {
-
-				throw;
+				return StatusCode(500, new { ServerErrorResponse.Message });
 			}
 		}
 	}

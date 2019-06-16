@@ -1,6 +1,5 @@
 ﻿using System.Threading.Tasks;
 using Aplication.Interfaces;
-using Domain;
 using EntityConfiguration;
 using PasswordHashing;
 using SharedModels.DTO;
