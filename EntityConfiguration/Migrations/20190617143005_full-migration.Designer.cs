@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EntityConfiguration.Migrations
 {
     [DbContext(typeof(VideoGamerDbContext))]
-    [Migration("20190614161522_Add Path column to Image to Game entity v2")]
-    partial class AddPathcolumntoImagetoGameentityv2
+    [Migration("20190617143005_full-migration")]
+    partial class fullmigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {

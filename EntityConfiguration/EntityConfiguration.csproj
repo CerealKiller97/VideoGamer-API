@@ -5,6 +5,33 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Migrations\20190522161039_CreateUsersMigration.cs" />
+    <Compile Remove="Migrations\20190522161039_CreateUsersMigration.Designer.cs" />
+    <Compile Remove="Migrations\20190522161953_UsersMigrationFixed.cs" />
+    <Compile Remove="Migrations\20190522161953_UsersMigrationFixed.Designer.cs" />
+    <Compile Remove="Migrations\20190522162033_UsersMigrationFixedv2.cs" />
+    <Compile Remove="Migrations\20190522162033_UsersMigrationFixedv2.Designer.cs" />
+    <Compile Remove="Migrations\20190522210022_TestMigration.cs" />
+    <Compile Remove="Migrations\20190522210022_TestMigration.Designer.cs" />
+    <Compile Remove="Migrations\20190523133107_FinalMigration.cs" />
+    <Compile Remove="Migrations\20190523133107_FinalMigration.Designer.cs" />
+    <Compile Remove="Migrations\20190531200615_Final migration.cs" />
+    <Compile Remove="Migrations\20190531200615_Final migration.Designer.cs" />
+    <Compile Remove="Migrations\20190608153437_Unique fields added for Developers.Name &amp; Developers.Website.cs" />
+    <Compile Remove="Migrations\20190608153437_Unique fields added for Developers.Name &amp; Developers.Website.Designer.cs" />
+    <Compile Remove="Migrations\20190609082729_Index added for Publisher table.cs" />
+    <Compile Remove="Migrations\20190609082729_Index added for Publisher table.Designer.cs" />
+    <Compile Remove="Migrations\20190609083111_Final migration v2.cs" />
+    <Compile Remove="Migrations\20190609083111_Final migration v2.Designer.cs" />
+    <Compile Remove="Migrations\20190614160133_Add Path column to Image to Game entity.cs" />
+    <Compile Remove="Migrations\20190614160133_Add Path column to Image to Game entity.Designer.cs" />
+    <Compile Remove="Migrations\20190614161522_Add Path column to Image to Game entity v2.cs" />
+    <Compile Remove="Migrations\20190614161522_Add Path column to Image to Game entity v2.Designer.cs" />
+    <Compile Remove="Migrations\20190617142720_full-migration.cs" />
+    <Compile Remove="Migrations\20190617142720_full-migration.Designer.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Bogus" Version="27.0.1" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="2.2.4" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="2.2.4" />

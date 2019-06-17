@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace EntityConfiguration.Migrations
 {
-    public partial class FinalMigration : Migration
+    public partial class fullmigration : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -112,7 +112,8 @@ namespace EntityConfiguration.Migrations
                     ReleaseDate = table.Column<DateTime>(nullable: false),
                     UserId = table.Column<int>(nullable: false),
                     GameMode = table.Column<int>(maxLength: 50, nullable: false),
-                    DeveloperId = table.Column<int>(nullable: true)
+                    DeveloperId = table.Column<int>(nullable: true),
+                    Path = table.Column<string>(maxLength: 255, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -186,6 +187,18 @@ namespace EntityConfiguration.Migrations
                 });
 
             migrationBuilder.CreateIndex(
+                name: "IX_Developers_Name",
+                table: "Developers",
+                column: "Name",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Developers_Website",
+                table: "Developers",
+                column: "Website",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
                 name: "IX_GameGenres_GenreId",
                 table: "GameGenres",
                 column: "GenreId");
@@ -225,6 +238,24 @@ namespace EntityConfiguration.Migrations
                 name: "IX_Games_ReleaseDate",
                 table: "Games",
                 column: "ReleaseDate");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Publishers_ISIN",
+                table: "Publishers",
+                column: "ISIN",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Publishers_Name",
+                table: "Publishers",
+                column: "Name",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Publishers_Website",
+                table: "Publishers",
+                column: "Website",
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_Users_Email",

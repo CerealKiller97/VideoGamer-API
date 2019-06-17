@@ -14,7 +14,7 @@ namespace EntityConfiguration.Configuration
 
             // Indexes
 			builder.HasIndex(g => g.Name)
-				.IsUnique(true);
+				   .IsUnique(true);
             builder.HasIndex(g => g.Engine);
             builder.HasIndex(g => g.AgeLabel);
             builder.HasIndex(g => g.ReleaseDate);

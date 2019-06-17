@@ -13,10 +13,10 @@ namespace EntityConfiguration.Configuration
 
             // 
             builder.HasIndex(d => d.Name)
-                .IsUnique(true);
+                   .IsUnique(true);
 
             builder.HasIndex(d => d.Website)
-                .IsUnique(true);
+                   .IsUnique(true);
 
 			// Properties
 			builder.Property(d => d.Name)
