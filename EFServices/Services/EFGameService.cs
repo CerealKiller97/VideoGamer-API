@@ -57,25 +57,6 @@ namespace EFServices.Services
 			
 			// VALIDATION FILE
 
-			List<GamePlatform> gamePlatforms = new List<GamePlatform>();
-			List<GameGenre> gameGenres = new List<GameGenre>();
-
-			foreach (int platform in dto.Platforms)
-			{
-				gamePlatforms.Add(new GamePlatform
-				{
-					PlatformId = platform
-				});
-			}
-
-			foreach (int genre in dto.Genres)
-			{
-				gameGenres.Add(new GameGenre
-				{
-					GenreId = genre
-				});
-			}
-
 			var game = new Domain.Game
 			{
 				Name = dto.Name,
@@ -90,6 +71,26 @@ namespace EFServices.Services
 				GameGenres = gameGenres,
 				Path = path
 			};
+			
+			
+
+			foreach (int platform in dto.Platforms)
+			{
+				game.GamePlatforms.Add(new GamePlatform
+				{
+					PlatformId = platform
+				});
+			}
+
+			foreach (int genre in dto.Genres)
+			{
+				gmae.GameGenres.Add(new GameGenre
+				{
+					GenreId = genre
+				});
+			}
+
+			
 
 
 			await _context.Games.AddAsync(game);
