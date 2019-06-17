@@ -1,0 +1,82 @@
+﻿@model SharedModels.DTO.Game.CreateGameDTO
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h1>Create</h1>
+
+@if (TempData["error"] != null)
+{
+    <div class="alert-danger">
+        <h3 class="text-center text-white py-4">@TempData["error"]</h3>
+    </div>
+}
+
+<h4>CreateGameDTO</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Name" class="control-label"></label>
+                <input asp-for="Name" class="form-control" />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Engine" class="control-label"></label>
+                <input asp-for="Engine" class="form-control" />
+                <span asp-validation-for="Engine" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="PublisherId" class="control-label"></label>
+                <input asp-for="PublisherId" class="form-control" />
+                <span asp-validation-for="PublisherId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="AgeLabel" class="control-label"></label>
+                <input asp-for="AgeLabel" class="form-control" />
+                <span asp-validation-for="AgeLabel" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ReleaseDate" class="control-label"></label>
+                <input asp-for="ReleaseDate" class="form-control" />
+                <span asp-validation-for="ReleaseDate" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="UserId" class="control-label"></label>
+                <input asp-for="UserId" class="form-control" />
+                <span asp-validation-for="UserId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="GameMode" class="control-label"></label>
+                <input asp-for="GameMode" class="form-control" />
+                <span asp-validation-for="GameMode" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="DeveloperId" class="control-label"></label>
+                <input asp-for="DeveloperId" class="form-control" />
+                <span asp-validation-for="DeveloperId" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Path" class="control-label"></label>
+                <input type="file"  name="Path" asp-for="Path" class="form-control" />
+                <span asp-validation-for="Path" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

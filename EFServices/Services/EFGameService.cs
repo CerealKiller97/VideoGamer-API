@@ -26,22 +26,25 @@ namespace EFServices.Services
 		public async Task<PagedResponse<Game>> All(GameSearchRequest request) 
         {
             var query = _context.Games
-                                    .Include(g => g.Publisher)
-                                    .Include(g => g.Developer)
-                                    .Include(g => g.GameGenres)
-                                    .AsQueryable();
+                                .Include(g => g.Publisher)
+                                .Include(g => g.Developer)
+                                .Include(g => g.GameGenres)
+								.Include(g => g.GamePlatforms)
+                                .AsQueryable();
             
             var buildedQuery = BuildQuery(query, request);
 
-            return query.Select(game => new Game
+            return buildedQuery.Select(game => new Game
 			{
                 Id = game.Id,
                 Name = game.Name,
                 Engine = game.Engine,
                 PublisherName = game.Publisher.Name,
+				DeveloperName = game.Developer.Name,
                 AgeLabel = game.AgeLabel.ToString(),
                 GameMode = game.GameMode.ToString(),
-                ReleaseDate = game.ReleaseDate
+                ReleaseDate = game.ReleaseDate,
+				ImagePath = game.Path
             }).Paginate(request.PerPage, request.Page);
 
         }
@@ -50,7 +53,6 @@ namespace EFServices.Services
 
         public async Task Create(CreateGameDTO dto)
         {
-
 			string path = await _fileService.Upload(dto.Path);
 			
 			// VALIDATION FILE
@@ -108,26 +110,31 @@ namespace EFServices.Services
             _context.SaveChanges();
         }
 
-        public async Task<SharedModels.DTO.Game.Game> Find(int id)
+        public async Task<Game> Find(int id)
         {
             var game = await _context.Games
-                                .Include(g => g.GamePlatforms)
-                                .Include(g => g.Publisher)
+								.Include(g => g.Publisher)
+								.Include(g => g.Developer)
+								.Include(g => g.GameGenres)
+								.Include(g => g.GamePlatforms)
                                 .FirstOrDefaultAsync(g => g.Id == id);
 
-            if (game is null)
+            if (game == null)
             {
                 throw new EntityNotFoundException("Game");
             }
 
-            return new SharedModels.DTO.Game.Game
-            {
+            return new Game
+			{
                 Id = game.Id,
                 AgeLabel = game.AgeLabel.ToString(),
                 Engine = game.Engine,
                 GameMode = game.GameMode.ToString(),
                 Name = game.Name,
-                PublisherName = game.Publisher.Name
+                PublisherName = game.Publisher.Name,
+				DeveloperName = game.Developer.Name,
+				ImagePath = game.Path,
+				ReleaseDate = game.ReleaseDate
             };
         }
 
@@ -147,9 +154,15 @@ namespace EFServices.Services
 
             if (request.Publisher != null)
             {
-                string publisher = request.Developer.ToLower();
-                query = query.Where(q => q.Developer.Name.ToLower().Contains(publisher));
+                string publisher = request.Publisher.ToLower();
+                query = query.Where(q => q.Publisher.Name.ToLower().Contains(publisher));
             }
+
+			if (request.Developer != null)
+			{
+				string developer = request.Developer.ToLower();
+				query = query.Where(q => q.Developer.Name.ToLower().Contains(developer));
+			}
 
             if (request.Engine != null)
             {
@@ -157,17 +170,19 @@ namespace EFServices.Services
                 query = query.Where(q => q.Engine.ToLower().Contains(engine));
             }
 
-            if (request.AgeLabel != null)
-            {
-                query = query.Where(q => q.AgeLabel == request.AgeLabel);
-            }
+			// TODO: Convert string to Enum and then check type and gve back a response
 
-            if (request.GameMode != null)
-            {
-                query = query.Where(q => q.GameMode == request.GameMode);
-            }
+			//if (request.AgeLabel != null) 
+			//{
+			//	query = query.Where(q => q.AgeLabel == request.AgeLabel);
+			//}
 
-            return query;
+			//if (request.GameMode != null)
+			//{
+			//	query = query.Where(q => q.GameMode == request.GameMode);
+			//}
+
+			return query;
         }
     }
 }

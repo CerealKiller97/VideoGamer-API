@@ -15,5 +15,6 @@ namespace SharedModels.DTO.Game
 		public DateTime ReleaseDate { get; set; }
 		public string GameMode { get; set; }
         IEnumerable<Genre.Genre> Genres = new List<Genre.Genre>();
+		public string ImagePath { get; set; }
 	}
 }

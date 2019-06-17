@@ -41,8 +41,8 @@ namespace VideoGamer.Controllers
 		[HttpGet]
         public async Task<ActionResult<PagedResponse<IEnumerable<Game>>>> Get([FromQuery] GameSearchRequest request)
         {
-            var games = await _gamesService.All(request);
-            return Ok(games);
+			var games = await _gamesService.All(request);
+			return Ok(games);
         }
 
 		// GET: api/Games/5
