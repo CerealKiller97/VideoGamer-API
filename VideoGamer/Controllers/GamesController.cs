@@ -7,7 +7,6 @@ using Aplication.Pagination;
 using Aplication.Searches;
 using EntityConfiguration;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SharedModels.DTO.Game;
 using SharedModels.Fluent.Game;

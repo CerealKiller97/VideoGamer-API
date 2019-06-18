@@ -44,7 +44,7 @@ namespace MVC.Controllers
 			} catch (EntityNotFoundException e) {
 				TempData["error"] = e.Message;
 				return RedirectToAction(nameof(Index));
-			} catch (Exception e) {
+			} catch (Exception) {
 				TempData["error"] = ServerErrorResponse.Message;
 				return RedirectToAction(nameof(Index));
 			}
@@ -59,27 +59,30 @@ namespace MVC.Controllers
         // POST: Games/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Create([FromForm] CreateGameDTO dto)
+        public async Task<ActionResult> Create([FromForm] CreateGameDTODataAnnotations dto)
         {
-			var validator = new GameFluentValidator(_context);
-			var errors = await validator.ValidateAsync(dto);
-			if (!errors.IsValid)
+			if (!ModelState.IsValid)
 			{
-				var mapped = errors.Errors.Select(x => new
-				{
-					Name = x.PropertyName,
-					Error = x.ErrorMessage
-				}).ToArray();
-
-				TempData["error"] = "Please fill all blank boxes."; //mapped.ToString();
 				return RedirectToAction(nameof(Create));
 			}
+
 			try
 			{
+				var dtoNew = new CreateGameDTO {
+					AgeLabel = dto.AgeLabel,
+					DeveloperId = dto.DeveloperId,
+					Engine = dto.Engine,
+					GameMode = dto.GameMode,
+					Name = dto.Name,
+					Path = dto.Path,
+					PublisherId = dto.PublisherId,
+					ReleaseDate = dto.ReleaseDate,
+					UserId = dto.UserId
+				};
 				// TODO: Add insert logic here
-				await _gameService.Create(dto);
+				await _gameService.Create(dtoNew);
 				return RedirectToAction(nameof(Index));
-			} catch (Exception e)
+			} catch (Exception)
 			{
 				TempData["error"] = "Exception";
 				return RedirectToAction(nameof(Index));

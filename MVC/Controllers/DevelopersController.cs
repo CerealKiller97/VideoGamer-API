@@ -3,13 +3,11 @@ using Aplication.Helpers;
 using Aplication.Interfaces;
 using Aplication.Searches;
 using EntityConfiguration;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SharedModels.DTO;
 using SharedModels.Fluent.Developer;
 using System;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Session;
 using System.Linq;
 
 namespace MVC.Controllers
@@ -45,7 +43,7 @@ namespace MVC.Controllers
 			} catch (EntityNotFoundException e) {
 				TempData["error"] = e.Message;
 				return RedirectToAction(nameof(Index));
-			} catch (Exception e) {
+			} catch (Exception) {
 				TempData["error"] = ServerErrorResponse.Message;
 				return RedirectToAction(nameof(Index));
 			}
@@ -72,7 +70,7 @@ namespace MVC.Controllers
 					Error = x.ErrorMessage
 				}).ToArray();
 
-				TempData["error"] = "Please fill all blank boxes."; //mapped.ToString();
+				ViewBag["error"] = mapped;
 				return RedirectToAction(nameof(Create));
 			}
 			try
@@ -81,7 +79,7 @@ namespace MVC.Controllers
 				await _developerService.Create(dto);
                 return RedirectToAction(nameof(Index));
             }
-            catch(Exception e)
+            catch(Exception)
             {
 				TempData["error"] = "Exception";
 				return RedirectToAction(nameof(Index));
@@ -97,7 +95,7 @@ namespace MVC.Controllers
 			} catch (EntityNotFoundException e) {
 				TempData["error"] = e.Message;
 				return RedirectToAction(nameof(Index));
-			} catch (Exception e) {
+			} catch (Exception) {
 				TempData["error"] = "Exception";
 				return RedirectToAction(nameof(Index));
 			}

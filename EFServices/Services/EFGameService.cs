@@ -8,7 +8,6 @@ using Domain.Relations;
 using EntityConfiguration;
 using Microsoft.EntityFrameworkCore;
 using SharedModels.DTO.Game;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -67,13 +66,9 @@ namespace EFServices.Services
 				UserId = dto.UserId,
 				GameMode = dto.GameMode,
 				AgeLabel = dto.AgeLabel,
-				GamePlatforms = gamePlatforms,
-				GameGenres = gameGenres,
 				Path = path
 			};
 			
-			
-
 			foreach (int platform in dto.Platforms)
 			{
 				game.GamePlatforms.Add(new GamePlatform
@@ -84,14 +79,11 @@ namespace EFServices.Services
 
 			foreach (int genre in dto.Genres)
 			{
-				gmae.GameGenres.Add(new GameGenre
+				game.GameGenres.Add(new GameGenre
 				{
 					GenreId = genre
 				});
 			}
-
-			
-
 
 			await _context.Games.AddAsync(game);
 

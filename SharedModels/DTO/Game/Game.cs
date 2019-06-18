@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using Domain;
 
 namespace SharedModels.DTO.Game
 {
@@ -15,6 +14,7 @@ namespace SharedModels.DTO.Game
 		public DateTime ReleaseDate { get; set; }
 		public string GameMode { get; set; }
         IEnumerable<Genre.Genre> Genres = new List<Genre.Genre>();
+        IEnumerable<Platform> Platforms = new List<Platform>();
 		public string ImagePath { get; set; }
 	}
 }
