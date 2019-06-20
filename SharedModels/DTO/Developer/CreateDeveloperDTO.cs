@@ -1,6 +1,6 @@
 using System;
 
-namespace SharedModels.DTO
+namespace SharedModels.DTO.Developer
 {
     public class CreateDeveloperDTO 
     {

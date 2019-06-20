@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-namespace SharedModels.DTO
+
+namespace SharedModels.DTO.Developer
 {
     public class Developer
     {

@@ -1,5 +1,5 @@
 using Aplication.Searches;
-using SharedModels.DTO;
+using SharedModels.DTO.Developer;
 
 namespace Aplication.Interfaces
 {

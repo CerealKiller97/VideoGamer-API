@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Aplication.Interfaces;
 using Domain.Relations;
 using EntityConfiguration;
+using SharedModels.DTO.GameGenre;
 
 namespace EFServices.Services
 {
@@ -15,10 +16,10 @@ namespace EFServices.Services
 			_context = context;
 		}
 
-		public async Task AddGenreToGame(int gameId, IEnumerable<int> genres)
+		public async Task AddGenreToGame(int gameId, CreateGameGenreDTO dto)
 		{
 			List<GameGenre> pairs = new List<GameGenre>();
-			foreach(var genre in genres)
+			foreach(var genre in dto.Genres)
 			{
 				pairs.Add(new GameGenre
 				{
@@ -33,7 +34,7 @@ namespace EFServices.Services
 		}
 
 
-		public async Task RemoveGenreFrom(int gameId, IEnumerable<int> genres)
+		public async Task RemoveGenreFrom(int gameId, DeleteGameGenreDTO dto)
 		{
 			
 		}

@@ -1,4 +1,4 @@
-﻿@model SharedModels.DTO.CreateDeveloperDTO
+﻿@model SharedModels.DTO.Developer.CreateDeveloperDTODataAnnotations
 
 @{
     ViewData["Title"] = "Create";
@@ -44,17 +44,6 @@
                 <input type="submit" value="Create" class="btn btn-primary" />
             </div>
         </form>
-
-        @{ 
-            if (ViewBag["errors"] != null)
-            {
-                foreach (var item in ViewBag["errors"])
-                {
-                    <li>@item.Name: @item.Error</li>
-                }
-            }
-        }
-
     </div>
 </div>
 

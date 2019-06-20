@@ -4,11 +4,9 @@ using Aplication.Interfaces;
 using Aplication.Searches;
 using EntityConfiguration;
 using Microsoft.AspNetCore.Mvc;
-using SharedModels.DTO;
-using SharedModels.Fluent.Developer;
 using System;
 using System.Threading.Tasks;
-using System.Linq;
+using SharedModels.DTO.Developer;
 
 namespace MVC.Controllers
 {
@@ -58,31 +56,38 @@ namespace MVC.Controllers
         // POST: Developers/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Create([FromForm] CreateDeveloperDTO dto)
+		public async Task<ActionResult> Create([FromForm] CreateDeveloperDTODataAnnotations dto)
         {
-			var validator = new DeveloperFluentValidatior(_context);
-			var errors = await validator.ValidateAsync(dto);
-			if (!errors.IsValid)
+			if (!ModelState.IsValid)
 			{
-				var mapped = errors.Errors.Select(x => new
-				{
-					Name = x.PropertyName,
-					Error = x.ErrorMessage
-				}).ToArray();
-
-				ViewBag["error"] = mapped;
-				return RedirectToAction(nameof(Create));
+				TempData["error"] = "Error: Please fill in blank boxes";
+				return RedirectToAction(nameof(Index));
 			}
 			try
             {
-				// TODO: Add insert logic here
-				await _developerService.Create(dto);
+				var newDto = new CreateDeveloperDTO
+				{
+					Name = dto.Name,
+					Website = dto.Website,
+					HQ = dto.HQ,
+					Founded = dto.Founded
+				};
+
+				await _developerService.Create(newDto);
                 return RedirectToAction(nameof(Index));
             }
-            catch(Exception)
+            catch(Exception e)
             {
-				TempData["error"] = "Exception";
-				return RedirectToAction(nameof(Index));
+				string error = e.InnerException.Message;
+				if (error.Contains("IX_Developers_Website"))
+				{
+					TempData["error"] = "Website already exists.";
+				} 
+				else
+				{
+					TempData["error"] = "Name already exists.";
+				}
+				return RedirectToAction(nameof(Create));
             }
         }
 
@@ -92,8 +97,6 @@ namespace MVC.Controllers
 			try {
 				var developer = await _developerService.Find(id);
 				return View(developer);
-			} catch (EntityNotFoundException e) {
-				TempData["error"] = e.Message;
 				return RedirectToAction(nameof(Index));
 			} catch (Exception) {
 				TempData["error"] = "Exception";
@@ -106,18 +109,12 @@ namespace MVC.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Edit(int id, [FromForm] CreateDeveloperDTO dto)
         {
-			var validator = new DevelopUpdateFluentValidator(_context, id);
-			var errors = await validator.ValidateAsync(dto);
-			if (!errors.IsValid)
-			{
-				var mapped = errors.Errors.Select(x => new
-				{
-					Name = x.PropertyName,
-					Error = x.ErrorMessage
-				}).ToArray();
 
+			if (!ModelState.IsValid)
+			{
 				TempData["error"] = "Please fill all blank boxes."; //mapped.ToString();
 				return RedirectToAction(nameof(Create));
+
 			}
 			try {
 				// TODO: Add update logic here
@@ -126,8 +123,16 @@ namespace MVC.Controllers
             } catch (EntityNotFoundException e) {
 				TempData["error"] = e.Message;
 				return RedirectToAction(nameof(Index));
-			} catch {
-                return View();
+			} catch(Exception e) {
+				string error = e.InnerException.Message;
+				if (error.Contains("IX_Developers_Website"))
+				{
+					TempData["error"] = "Website already exists.";
+				} else
+				{
+					TempData["error"] = "Name already exists.";
+				}
+				return RedirectToAction(nameof(Edit));
             }
         }
 

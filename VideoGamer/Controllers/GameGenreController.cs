@@ -1,5 +1,4 @@
 ﻿using Aplication.Interfaces;
-using Domain.Relations;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -21,14 +20,27 @@ namespace VideoGamer.Controllers
 
 		[HttpPost]
 		[Route("")]
-		public async Task<IActionResult> Create(GameGenre dto)
+		public async Task<IActionResult> Create(int gameId, SharedModels.DTO.GameGenre.CreateGameGenreDTO dto)
 		{
 			try {
-				await _gameGenreService.AddGenreToGame(dto);
+				await _gameGenreService.AddGenreToGame(gameId, dto);
 				return StatusCode(201);
 			} catch (Exception e) {
 				return StatusCode(500, e.Message);
 			}
 		}
+
+		[HttpDelete]
+		[Route("")]
+		public async Task<IActionResult> Delete(int gameId, SharedModels.DTO.GameGenre.DeleteGameGenreDTO dto)
+		{ 
+			try {
+				await _gameGenreService.RemoveGenreFrom(gameId, dto);
+				return NoContent();
+			} catch(Exception e) {
+				return StatusCode(500);
+			}
+		}
+
     }
 }

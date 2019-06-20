@@ -9,7 +9,7 @@ using Aplication.Searches;
 using Domain;
 using EntityConfiguration;
 using Microsoft.EntityFrameworkCore;
-using SharedModels.DTO;
+using SharedModels.DTO.Developer;
 
 namespace EFServices.Services
 {
@@ -20,7 +20,7 @@ namespace EFServices.Services
         {
         }
 
-        public async Task<PagedResponse<SharedModels.DTO.Developer>> All(DeveloperSearchRequest request)
+		public async Task<PagedResponse<SharedModels.DTO.Developer.Developer>> All(DeveloperSearchRequest request)
         {
             var query = _context.Developers
                 .AsQueryable();
@@ -29,7 +29,7 @@ namespace EFServices.Services
 
             //TODO: AutoMapper
 
-            return buildedQuery.Select(dev => new SharedModels.DTO.Developer
+            return buildedQuery.Select(dev => new SharedModels.DTO.Developer.Developer
             {
                 Id = dev.Id,
                 Name = dev.Name,
@@ -50,7 +50,7 @@ namespace EFServices.Services
             }).Paginate(request.PerPage, request.Page);
         }
 
-        public async Task<SharedModels.DTO.Developer> Find(int id)
+        public async Task<SharedModels.DTO.Developer.Developer> Find(int id)
         {
             var dev = await _context.Developers
                 .Include(d => d.Games)
@@ -78,8 +78,8 @@ namespace EFServices.Services
                 };
             });
 
-            return new SharedModels.DTO.Developer
-            {
+            return new SharedModels.DTO.Developer.Developer
+			{
                 Id = dev.Id,
                 Name = dev.Name,
                 Website = dev.Website,
@@ -161,5 +161,5 @@ namespace EFServices.Services
 
             return query;
         }
-    }
+	}
 }

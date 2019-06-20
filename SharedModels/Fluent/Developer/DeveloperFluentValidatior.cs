@@ -6,7 +6,7 @@ using SharedModels.CustomValidators;
 
 namespace SharedModels.Fluent.Developer
 {
-	public class DeveloperFluentValidatior : AbstractValidator<DTO.CreateDeveloperDTO>
+	public class DeveloperFluentValidatior : AbstractValidator<DTO.Developer.CreateDeveloperDTO>
 	{
         protected readonly VideoGamerDbContext _context;
 		public DeveloperFluentValidatior(VideoGamerDbContext context)
@@ -43,7 +43,7 @@ namespace SharedModels.Fluent.Developer
 				.NotEmpty()
 				.WithMessage("Website URL is required.")
 				.MinimumLength(10)
-				.WithMessage("Website URL must be at least 5 characters long.")
+				.WithMessage("Website URL must be at least 10 characters long.")
 				.MaximumLength(255)
 				.WithMessage("Website URL can't be longer than 255 characters long.")
 				.SetValidator(new UriValidator("Invalid URL address."))

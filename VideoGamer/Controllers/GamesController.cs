@@ -59,7 +59,7 @@ namespace VideoGamer.Controllers
         public async Task<ActionResult<Game>> Get(int id)
         {
             try {
-                var game = _gamesService.Find(id);
+                var game = await _gamesService.Find(id);
                 return Ok(game);
             } catch(EntityNotFoundException e) {
                 return NotFound(new { e.Message });
