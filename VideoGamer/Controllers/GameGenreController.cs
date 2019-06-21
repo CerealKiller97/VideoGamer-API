@@ -37,6 +37,8 @@ namespace VideoGamer.Controllers
 				return StatusCode(201);
 			} catch (EntityNotFoundException e) {
 				return NotFound(new { e.Message });
+			} catch(DataAlreadyExistsException e) {
+				return Conflict(new { e.Message });
 			} catch (Exception e) {
 				return StatusCode(500, e.Message);
 			}
@@ -59,7 +61,7 @@ namespace VideoGamer.Controllers
 				await _gameGenreService.RemoveGenreFrom(id, dto);
 				return NoContent();
 			} catch (EntityNotFoundException e) {
-				return NotFound(new { Message = e.Message });
+				return NotFound(new { e.Message });
 			} catch(Exception e) {
 				return StatusCode(500);
 			}
