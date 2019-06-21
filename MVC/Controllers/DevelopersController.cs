@@ -97,6 +97,8 @@ namespace MVC.Controllers
 			try {
 				var developer = await _developerService.Find(id);
 				return View(developer);
+			} catch (EntityNotFoundException e) {
+				TempData["error"] = e.Message;
 				return RedirectToAction(nameof(Index));
 			} catch (Exception) {
 				TempData["error"] = "Exception";
@@ -107,18 +109,25 @@ namespace MVC.Controllers
         // POST: Developers/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Edit(int id, [FromForm] CreateDeveloperDTO dto)
+        public async Task<ActionResult> Edit(int id, [FromForm] CreateDeveloperDTODataAnnotations dto)
         {
 
 			if (!ModelState.IsValid)
 			{
 				TempData["error"] = "Please fill all blank boxes."; //mapped.ToString();
-				return RedirectToAction(nameof(Create));
+				return RedirectToAction(nameof(Edit),new { id });
 
 			}
 			try {
+				var newDto = new CreateDeveloperDTO
+				{
+					Name = dto.Name,
+					Founded = dto.Founded,
+					HQ = dto.HQ,
+					Website = dto.Website
+				};
 				// TODO: Add update logic here
-				await _developerService.Update(id, dto);
+				await _developerService.Update(id, newDto);
                 return RedirectToAction(nameof(Index));
             } catch (EntityNotFoundException e) {
 				TempData["error"] = e.Message;

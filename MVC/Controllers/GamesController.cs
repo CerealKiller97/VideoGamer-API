@@ -1,18 +1,17 @@
 ﻿using Aplication.Exceptions;
+using Aplication.FileUpload;
 using Aplication.Helpers;
 using Aplication.Interfaces;
 using Aplication.Searches;
 using EntityConfiguration;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using SharedModels.DTO;
+using Microsoft.Extensions.Configuration;
 using SharedModels.DTO.Developer;
 using SharedModels.DTO.Game;
 using SharedModels.DTO.Publisher;
-using SharedModels.Fluent.Game;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace MVC.Controllers
@@ -22,18 +21,23 @@ namespace MVC.Controllers
 		private readonly IGameService _gameService;
 		private readonly IPublisherService _publisherService;
 		private readonly IDeveloperService _developerService;
+		private readonly IConfiguration _configuration;
+		private readonly IFileService _fileService;
 
 		private readonly VideoGamerDbContext _context;
 		
 		public GamesController(IGameService gameService, 
 			IPublisherService publisherService, 
 			IDeveloperService developerService, 
-			VideoGamerDbContext context)
+			VideoGamerDbContext context, IConfiguration configuration,
+			IFileService service)
 		{
 			_gameService = gameService;
 			_publisherService = publisherService;
 			_developerService = developerService;
 			_context = context;
+			_configuration = configuration;
+			_fileService = service;
 		}
 
 		// GET: Games
@@ -87,71 +91,92 @@ namespace MVC.Controllers
         {
 			try
 			{
+				var (Server, FilePath) = await _fileService.Upload(Path);
+
 				var dtoNew = new CreateGameDTO {
 					AgeLabel = dto.AgeLabel,
 					DeveloperId = dto.DeveloperId,
 					Engine = dto.Engine,
 					GameMode = dto.GameMode,
 					Name = dto.Name,
-					Path = Path,
+					Path = Server,
 					PublisherId = dto.PublisherId,
 					ReleaseDate = dto.ReleaseDate,
-					UserId = dto.UserId
+					UserId = dto.UserId,
+					FilePath = FilePath
 				};
-				// TODO: Add insert logic here
+
 				await _gameService.Create(dtoNew);
 				return RedirectToAction(nameof(Index));
 			} catch (Exception e)
 			{
-				TempData["error"] = "Exception";
+				TempData["error"] = e.Message;
 				return RedirectToAction(nameof(Index));
 			}
 		}
 
         // GET: Games/Edit/5
-        public ActionResult Edit(int id)
+        public async Task<IActionResult> Edit(int id)
         {
-            return View();
-        }
+			try {
+				var developer = await _gameService.Find(id);
+				return View(developer);
+			} catch (EntityNotFoundException e) {
+				TempData["error"] = e.Message;
+				return RedirectToAction(nameof(Index));
+			} catch (Exception) {
+				TempData["error"] = "Exception";
+				return RedirectToAction(nameof(Index));
+			}
+		}
 
         // POST: Games/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        public async Task<IActionResult> Edit(int id, [FromForm] CreateGameDTODataAnnotations dto)
         {
-            try
-            {
-                // TODO: Add update logic here
-
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
-        }
+			if (!ModelState.IsValid)
+			{
+				TempData["error"] = "Please fill all blank boxes."; //mapped.ToString();
+				return RedirectToAction(nameof(Edit), new { id });
+			}
+			try
+			{
+				var newDto = new CreateGameDTO
+				{
+					
+				};
+				// TODO: Add update logic here
+				await _gameService.Update(id, newDto);
+				return RedirectToAction(nameof(Index));
+			} catch (EntityNotFoundException e)
+			{
+				TempData["error"] = e.Message;
+				return RedirectToAction(nameof(Index));
+			} catch (Exception e)
+			{
+				string error = e.InnerException.Message;
+				
+				return RedirectToAction(nameof(Edit), new { id });
+			}
+		}
 
         // GET: Games/Delete/5
-        public ActionResult Delete(int id)
+        public async Task<IActionResult> Delete(int id)
         {
-            return View();
-        }
-
-        // POST: Games/Delete/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
-        {
-            try
-            {
-                // TODO: Add delete logic here
-
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
-        }
+			try
+			{
+				await _gameService.Delete(id);
+				return RedirectToAction(nameof(Index));
+			} catch (EntityNotFoundException e)
+			{
+				TempData["error"] = e.Message;
+				return RedirectToAction(nameof(Index));
+			} catch (Exception e)
+			{
+				TempData["error"] = e.Message;
+				return RedirectToAction(nameof(Index));
+			}
+		}
     }
 }

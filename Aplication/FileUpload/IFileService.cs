@@ -5,7 +5,7 @@ namespace Aplication.FileUpload
 {
 	public interface IFileService
 	{
-		Task<string> Upload(IFormFile file);
+		Task<(string Server, string FilePath)> Upload(IFormFile file);
 		Task Remove(string path);
 	}
 }

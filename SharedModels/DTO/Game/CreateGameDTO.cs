@@ -1,11 +1,9 @@
 ﻿using Domain;
-using Microsoft.AspNetCore.Http;
 using System;
-using System.Collections.Generic;
 
 namespace SharedModels.DTO.Game
 {
-    public class CreateGameDTO
+	public class CreateGameDTO
     {
         public string Name { get; set; }
         public string Engine { get; set; }
@@ -15,6 +13,7 @@ namespace SharedModels.DTO.Game
 		public int UserId { get; set; }
         public GameModes GameMode { get; set; }
         public int DeveloperId { get; set; }
-        public IFormFile Path { get; set; }
+        public string Path { get; set; }
+		public string FilePath { get; set; }
 	}
 }

@@ -1,12 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore;
+﻿using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Logging;
 
 namespace MVC
 {
@@ -19,6 +12,11 @@ namespace MVC
 
 		public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
 			WebHost.CreateDefaultBuilder(args)
+				.UseKestrel(x =>
+				{
+					x.Listen(new System.Net.IPAddress(new byte []{ 127, 0, 0, 1 }), 5100);
+
+				})
 				.UseStartup<Startup>();
 	}
 }

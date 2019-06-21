@@ -28,5 +28,6 @@ namespace Domain
         public int? DeveloperId { get; set; }
         public Developer Developer { get; set; }
         public string Path { get; set; }
+		public string FullPath { get; set; } = null;
 	}
 }

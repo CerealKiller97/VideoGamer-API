@@ -44,7 +44,6 @@ namespace MVC
 
 			services.AddSingleton<IFileService, FileUploadService>();
 
-
 			services.AddDistributedMemoryCache();
 
 			services.AddSession(options =>

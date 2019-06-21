@@ -3,11 +3,15 @@ using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Configuration;
 
 namespace Aplication.FileUpload
 {
 	public class FileUploadService : IFileService
 	{
+		private readonly IConfiguration _configuration;
+		public FileUploadService(IConfiguration configuration) => _configuration = configuration;
+
 		public async Task Remove(string path)
 		{
 			string rootFolder = Directory.GetCurrentDirectory();
@@ -15,7 +19,7 @@ namespace Aplication.FileUpload
 			File.Delete(Path.Combine(
 				Directory.GetParent(rootFolder) + "/MVC", "wwwroot/images", path));
 		}
-		public async Task<string> Upload(IFormFile file)
+		public async Task<(string Server, string FilePath)> Upload(IFormFile file)
 		{
 			List<string> allowedTypes = new List<string>()
 			{
@@ -39,7 +43,7 @@ namespace Aplication.FileUpload
 				await file.CopyToAsync(fileStream);
 			}
 
-			return path;
+			return ($"{_configuration.GetSection("Server").Value}/images/{fullName}", path);
 		}
 	}
 }

@@ -43,9 +43,13 @@ namespace EntityConfiguration.Configuration
                 .IsRequired(true)
                 .HasMaxLength(255);
 
+			builder.Property(g => g.FullPath)
+				.IsRequired(false)
+				.HasMaxLength(255);
+
 			// Relations
 
-            builder.HasOne(g => g.Developer)
+			builder.HasOne(g => g.Developer)
                 .WithMany(d => d.Games)
                 .OnDelete(DeleteBehavior.Cascade)
                 .HasPrincipalKey(d => d.Id)

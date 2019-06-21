@@ -56,8 +56,6 @@ namespace EFServices.Services
 
         public async Task Create(CreateGameDTO dto)
         {
-			string path = await _fileService.Upload(dto.Path);
-			
 			var game = new Domain.Game
 			{
 				Name = dto.Name,
@@ -68,7 +66,8 @@ namespace EFServices.Services
 				UserId = dto.UserId,
 				GameMode = dto.GameMode,
 				AgeLabel = dto.AgeLabel,
-				Path = path
+				Path = dto.Path,
+				FullPath = dto.FilePath
 			};
 
 			await _context.Games.AddAsync(game);
@@ -87,7 +86,9 @@ namespace EFServices.Services
             }
 
             _context.Games.Remove(game);
-			await _fileService.Remove(game.Path);
+
+			await _fileService.Remove(game.FullPath);
+
 			await _context.SaveChangesAsync();
         }
 
@@ -162,13 +163,13 @@ namespace EFServices.Services
 
 			// Check if user sent picture, if send that means he is changing cover image
 
-			if (dto.Path != null)
-			{
-				string path = await _fileService.Upload(dto.Path);
-				// Remove previous image in case if user uploaded new image
-				await _fileService.Remove(game.Path);
-				game.Path = path;
-			}
+			//if (dto.Path != null)
+			//{
+			//	string path = await _fileService.Upload(dto.Path);
+			//	// Remove previous image in case if user uploaded new image
+			//	await _fileService.Remove(game.Path);
+			//	game.Path = path;
+			//}
 
 			if (game.Name != dto.Name)
 			{

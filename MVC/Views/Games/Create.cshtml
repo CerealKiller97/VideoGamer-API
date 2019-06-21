@@ -3,10 +3,12 @@
 @{
     ViewData["Title"] = "Create";
     @using Domain;
-    var developers = ViewData["developers"] ?? null;
-    var publishers = ViewData["publishers"] ?? null;
+    var developers = ViewData["developers"];
+    var publishers = ViewData["publishers"];
     var ageLabels = new[] { 3, 7, 12, 16, 18 };
+
     var gameModes = Enum.GetValues(typeof(GameModes));
+
     var values = Enum.GetValues(typeof(Platforms))
                      .Cast<Platforms>()
                      .ToList();
@@ -62,9 +64,9 @@
                 <label asp-for="GameMode" class="control-label"></label>
                 <select asp-for="GameMode" class="form-control">
                     <span asp-validation-for="GameMode" class="text-danger"></span>
-                    @for (int i = 0; i < gameModes.Length; i++)
+                    @foreach (int i in gameModes)
                     {
-                        <option value="@i" class="form-control">@gameModes.GetValue(i)</option>
+                        <option value="@i" class="form-control">@Enum.GetName(typeof(GameModes), i)</option>
                     }
                 </select>
             </div>
