@@ -90,14 +90,15 @@ namespace VideoGamer.Controllers
                 return UnprocessableEntity(ValidationFormatter.Format(errors));
             }
 
-            try {
-                await _gamesService.Create(dto);
-                return StatusCode(201);
-            } catch (Exception e) {
-				var s = 2;
-                return StatusCode(500, e);
-            }
-        }
+	        try {
+				var user = Int32.Parse(HttpContext.User.FindFirst("id").Value);
+				dto.UserId = user;
+				await _gamesService.Create(dto);
+			    return StatusCode(201);
+			} catch (Exception e) {
+			  return StatusCode(500, e);
+			}
+		}
 
 		// PUT: api/Games/5
 		/// <summary>
@@ -115,7 +116,7 @@ namespace VideoGamer.Controllers
 		[HttpPut("{id}")]
         public async Task<IActionResult> Put(int id, [FromForm] CreateGameDTO dto)
         {
-			var validator = new GameFluentValidator(_context);
+			var validator = new GameUpdateFluentValidator(_context, id);
 			var errors = await validator.ValidateAsync(dto);
 
 			if (!errors.IsValid)

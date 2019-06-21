@@ -7,9 +7,8 @@ namespace SharedModels.Fluent
 	{
 		public PlatformFluentValidator()
 		{
-			RuleFor(p => p.PlatformName)
-				.NotEmpty()
-				.IsInEnum();
+			RuleFor(p => p.Platforms)
+				.NotEmpty();
 		}
 	}
 }

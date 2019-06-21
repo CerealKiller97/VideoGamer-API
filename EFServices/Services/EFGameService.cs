@@ -9,6 +9,7 @@ using Domain.Relations;
 using EntityConfiguration;
 using Microsoft.EntityFrameworkCore;
 using SharedModels.DTO.Game;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -35,7 +36,7 @@ namespace EFServices.Services
             
             var buildedQuery = BuildQuery(query, request);
 
-            return buildedQuery.Select(game => new SharedModels.DTO.Game.Game
+			return buildedQuery.Select(game => new SharedModels.DTO.Game.Game
 			{
                 Id = game.Id,
                 Name = game.Name,
@@ -45,9 +46,10 @@ namespace EFServices.Services
                 AgeLabel = game.AgeLabel.ToString(),
                 GameMode = game.GameMode.ToString(),
                 ReleaseDate = game.ReleaseDate,
-				ImagePath = game.Path
-            }).Paginate(request.PerPage, request.Page);
-
+				ImagePath = game.Path,
+				Genres = game.GameGenres.Select(g => g.Genre.Name).ToList(),
+				Platforms =  game.GamePlatforms.Select(gg => Enum.GetName(typeof(Platforms), gg.Platform.Name)).ToList()
+			}).Paginate(request.PerPage, request.Page);
         }
 
         public async Task<int> Count() => await _context.Games.CountAsync();
@@ -56,8 +58,6 @@ namespace EFServices.Services
         {
 			string path = await _fileService.Upload(dto.Path);
 			
-			// VALIDATION FILE
-
 			var game = new Domain.Game
 			{
 				Name = dto.Name,
@@ -67,32 +67,9 @@ namespace EFServices.Services
 				ReleaseDate = dto.ReleaseDate,
 				UserId = dto.UserId,
 				GameMode = dto.GameMode,
-				AgeLabel = (PegiAgeRating) 12,
+				AgeLabel = dto.AgeLabel,
 				Path = path
 			};
-
-			List<GamePlatform> platforms = new List<GamePlatform>();
-			List<GameGenre> genres = new List<GameGenre>();
-
-
-			foreach (int platform in dto.Platforms)
-			{
-				platforms.Add(new GamePlatform
-				{
-					PlatformId = platform
-				});
-			}
-
-			foreach (int genre in dto.Genres)
-			{
-				genres.Add(new GameGenre
-				{
-					GenreId = genre
-				});
-			}
-
-			game.GameGenres = genres;
-			game.GamePlatforms = platforms;
 
 			await _context.Games.AddAsync(game);
 
@@ -103,13 +80,15 @@ namespace EFServices.Services
         {
             var game = await _context.Games.FirstOrDefaultAsync(g => g.Id == id);
 
+
             if (game == null)
             {
                 throw new EntityNotFoundException("Game");
             }
 
             _context.Games.Remove(game);
-            _context.SaveChanges();
+			await _fileService.Remove(game.Path);
+			await _context.SaveChangesAsync();
         }
 
         public async Task<SharedModels.DTO.Game.Game> Find(int id)
@@ -126,16 +105,35 @@ namespace EFServices.Services
                 throw new EntityNotFoundException("Game");
             }
 
-			var genres = game.GameGenres.Select(g => new SharedModels.DTO.Genre.Genre
-			{
-				Id = g.Genre.Id,
-				Name = g.Genre.Name
-			}).ToList();
+			var genres = game.GameGenres.Select(g => g.GenreId).ToList();
 
-			//var platforms = game.GamePlatforms.Select(p => new SharedModels.DTO.GamePlatform.GamePlatform
-			//{
-			//	Platforms = p.Platform.Name.ToString()
-			//}).ToList();
+			List<string> gameGenres = new List<string>();
+
+			foreach (var item in genres)
+			{
+				var genre = await _context.Genres.FirstOrDefaultAsync(g => g.Id == item);
+
+				if (genre != null)
+				{
+					gameGenres.Add(genre.Name);
+				}
+			}
+
+
+			var platforms = game.GamePlatforms.Select(gp => gp.PlatformId).ToList();
+
+			List<string> gamePlatforms = new List<string>();
+
+			foreach (var item in platforms)
+			{
+				var platform = await _context.Platforms.FirstOrDefaultAsync(g => g.Id == item);
+
+				if (platform != null)
+				{
+					var platformName = Enum.GetName(typeof(Platforms), platform.Name);
+					gamePlatforms.Add(platformName);
+				}
+			}
 
 			return new SharedModels.DTO.Game.Game
 			{
@@ -148,9 +146,9 @@ namespace EFServices.Services
 				DeveloperName = game.Developer.Name,
 				ImagePath = game.Path,
 				ReleaseDate = game.ReleaseDate,
-				Genres = genres,
-				// Platforms = platforms
-            };
+				Genres = gameGenres,
+				Platforms = gamePlatforms
+			};
         }
 
         public async Task Update(int id, CreateGameDTO dto)
@@ -162,6 +160,16 @@ namespace EFServices.Services
 				throw new EntityNotFoundException("Game");
 			}
 
+			// Check if user sent picture, if send that means he is changing cover image
+
+			if (dto.Path != null)
+			{
+				string path = await _fileService.Upload(dto.Path);
+				// Remove previous image in case if user uploaded new image
+				await _fileService.Remove(game.Path);
+				game.Path = path;
+			}
+
 			if (game.Name != dto.Name)
 			{
 				game.Name = dto.Name;
@@ -171,6 +179,45 @@ namespace EFServices.Services
 			{
 				game.Engine = dto.Engine;
 			}
+
+			if (game.DeveloperId != dto.DeveloperId) 
+			{
+				game.DeveloperId = dto.DeveloperId;
+			}
+
+			if (game.PublisherId != dto.PublisherId)
+			{
+				game.PublisherId = dto.PublisherId;
+			}
+
+			if (game.AgeLabel != dto.AgeLabel)
+			{
+				game.AgeLabel = dto.AgeLabel;
+			}
+
+			if (game.ReleaseDate != dto.ReleaseDate)
+			{
+				game.ReleaseDate = dto.ReleaseDate;
+			}
+
+			if (dto.UserId == null)
+			{
+				game.UserId = game.UserId;
+			}
+
+			if (game.GameMode != dto.GameMode)
+			{
+				game.GameMode = dto.GameMode;
+			}
+
+			if (game.DeveloperId != dto.DeveloperId)
+			{
+				game.DeveloperId = dto.DeveloperId;
+			}
+
+			_context.Entry(game).State = EntityState.Modified;
+
+			await _context.SaveChangesAsync();
 		}
 
 

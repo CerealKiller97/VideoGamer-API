@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using System.Text;
@@ -29,7 +30,7 @@ namespace VideoGamer
 
 		public void ConfigureServices(IServiceCollection services)
 		{
-            string key = Configuration.GetSection("JwtKey").Value; 
+			string key = Configuration.GetSection("JwtKey").Value;
 
 			byte[] keyBytes = Encoding.ASCII.GetBytes(key);
 
@@ -53,6 +54,11 @@ namespace VideoGamer
 
 			services.AddSwaggerGen(c =>
 			{
+				var security = new Dictionary<string, IEnumerable<string>>
+				{
+					{"Bearer", new string[] { }},
+				};
+
 				c.SwaggerDoc("v1", new Info
 				{
 					Version = "v1",
@@ -78,34 +84,34 @@ namespace VideoGamer
 				c.IncludeXmlComments(xmlPath);
 			});
 
-			
-
-			// TODO: HTTP ONLY cookie flag
-
-			//	services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-			//	.AddJwtBearer(options => {
-			//	options.Events = new JwtBearerEvents
-			//	{
-			//		OnMessageReceived = context =>
-			//		{
-			//			context.Token = context.Request.Cookies["CookieName"];
-			//			return Task.CompletedTask;
-			//		}
-			//	};
-			//});
-
 			DependencyConfiguration.Configure(services);
 		}
 
 
+
+		// TODO: HTTP ONLY cookie flag
+
+		//	services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+		//	.AddJwtBearer(options => {
+		//	options.Events = new JwtBearerEvents
+		//	{
+		//		OnMessageReceived = context =>
+		//		{
+		//			context.Token = context.Request.Cookies["CookieName"];
+		//			return Task.CompletedTask;
+		//		}
+		//	};
+		//});
+
+
 		public void Configure(IApplicationBuilder app, IHostingEnvironment env, VideoGamerDbContext context)
 		{
-            var DbSeeder = new DatabaseSeeder(context);
-            DbSeeder.Seed();
+			var DbSeeder = new DatabaseSeeder(context);
+			DbSeeder.Seed();
 
-            if (env.IsDevelopment())
+			if (env.IsDevelopment())
 			{
-                app.UseDeveloperExceptionPage();
+				app.UseDeveloperExceptionPage();
 				app.UseCors(policy =>
 				{
 					policy.AllowAnyHeader();
@@ -134,5 +140,3 @@ namespace VideoGamer
 		}
 	}
 }
-
-

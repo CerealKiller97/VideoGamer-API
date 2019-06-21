@@ -1,17 +1,20 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using EntityConfiguration;
+﻿using EntityConfiguration;
 using FluentValidation;
 using SharedModels.DTO.Game;
+using System;
+using System.Linq;
+
 namespace SharedModels.Fluent.Game
 {
-	public class GameFluentValidator : AbstractValidator<CreateGameDTO>
+	public class GameUpdateFluentValidator : AbstractValidator<CreateGameDTO>
 	{
-		protected readonly VideoGamerDbContext _context;
-		public GameFluentValidator(VideoGamerDbContext context)
+		private readonly int _id;
+		private readonly VideoGamerDbContext _context;
+
+		public GameUpdateFluentValidator(VideoGamerDbContext context, int id)
 		{
-			_context = context;
+			_context = context; 
+			_id = id;
 
 			CascadeMode = CascadeMode.StopOnFirstFailure;
 
@@ -52,35 +55,22 @@ namespace SharedModels.Fluent.Game
 				.WithMessage("Must be of the offered ones.");
 
 			RuleFor(g => g.PublisherId)
-				.NotEmpty()
-				.WithMessage("Publisher is required.")
-				.Must(ExistInDbPublisher)
-				.WithMessage("Publisher doesn't exist.");
+			.NotEmpty()
+			.WithMessage("Publisher is required.")
+			.Must(ExistInDbPublisher)
+			.WithMessage("Publisher doesn't exist.");
 
 			RuleFor(g => g.DeveloperId)
 				.NotEmpty()
 				.WithMessage("Developer is required.")
 				.Must(ExistInDb)
 				.WithMessage("Developer doesn't exist.");
-
-			RuleFor(g => g.Path)
-				.NotEmpty()
-				.WithMessage("Image is required.");
 		}
 
-		private  bool ExistInDb(int DeveloperId) => _context.Developers.Any(d => d.Id == DeveloperId);
+		private bool BeUniqueName(string Name) => !_context.Games.Any(g => g.Name == Name && g.Id != _id);
 
 		private bool ExistInDbPublisher(int publisherId) => _context.Publishers.Any(p => p.Id == publisherId);
 
-		protected virtual bool BeUniqueName(string Name)
-		{
-			return !_context.Games.Any(g => g.Name == Name);
-		}
-
-		protected virtual bool ExistInDatabase(List<int> platforms)
-		{
-			//TODO: check if all platforms exist
-			return true;
-		}
+		private bool ExistInDb(int DeveloperId) => _context.Developers.Any(d => d.Id == DeveloperId);
 	}
 }
