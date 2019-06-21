@@ -15,36 +15,41 @@ namespace EFServices.Services
 	{
 		private readonly VideoGamerDbContext _context;
 
-		public EFGamePlatformService(VideoGamerDbContext context)
-		{
-			_context = context;
-		}
+		public EFGamePlatformService(VideoGamerDbContext context) => _context = context;
 
 		public async Task Add(int gameId, GamePlatform dto)
 		{
-			var game = await _context.Games.FindAsync(gameId);
+			var game = await _context.Games
+									.Include(g => g.GamePlatforms)	
+									.FirstOrDefaultAsync(g => g.Id == gameId);
 
 			if (game == null)
 			{
 				throw new EntityNotFoundException("Game");
 			}
 
+			List<Platform> platforms = new List<Platform>();
 
-			List<Platform> genres = new List<Platform>();
-
-			foreach (var genre in dto.Platforms)
+			foreach (var platform in dto.Platforms)
 			{
-				var platformCheck = _context.Platforms.Find(genre);
+				Platform platformCheck = _context.Platforms.Find(platform);
 				if (platformCheck == null)
 				{
-					throw new EntityNotFoundException("Genre");
+					throw new EntityNotFoundException("Platform");
 				} else
 				{
-					genres.Add(platformCheck);
+					bool contains = game.GamePlatforms.Any(g => g.PlatformId == platform);
+
+					if (contains)
+					{
+						throw new DataAlreadyExistsException();
+					}
+
+					platforms.Add(platformCheck);
 				}
 			}
 
-			if (dto.Platforms.Count != genres.Count)
+			if (dto.Platforms.Count != platforms.Count)
 			{
 				throw new Exception("One of genres doesn't exist.");
 			}
@@ -66,23 +71,37 @@ namespace EFServices.Services
 
 		public async Task Delete(int gameId, GamePlatform dto)
 		{
-			var game = await _context
-								.Games
-								.Include(u => u.GameGenres)
-								.FirstOrDefaultAsync(g => g.Id == gameId);
+			var game = await _context.Games
+									 .Include(u => u.GamePlatforms)
+									 .FirstOrDefaultAsync(g => g.Id == gameId);
 
 			if (game == null)
 			{
 				throw new EntityNotFoundException("Game");
 			}
 
+			List<Domain.Relations.GamePlatform> gamePlatforms = new List<Domain.Relations.GamePlatform>();
 
 			foreach (int item in dto.Platforms)
 			{
-				var platforms = game.GamePlatforms.FirstOrDefault(g => g.PlatformId == item);
+				var platform = game.GamePlatforms.FirstOrDefault(g => g.PlatformId == item);
 
-				game.GamePlatforms.Remove(platforms);
+				if (platform == null)
+				{
+					throw new EntityNotFoundException("Platform");
+				}
 
+				gamePlatforms.Add(platform);
+			}
+
+			if (gamePlatforms.Count != dto.Platforms.Count)
+			{
+				throw new Exception("One of platforms doens't exist.");
+			}
+
+			foreach (var platform in gamePlatforms)
+			{
+				_context.Remove(platform);
 				await _context.SaveChangesAsync();
 			}
 		}

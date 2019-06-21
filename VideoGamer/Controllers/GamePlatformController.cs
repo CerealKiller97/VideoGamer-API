@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Aplication.Exceptions;
+using Aplication.Helpers;
 using Aplication.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -31,8 +32,10 @@ namespace VideoGamer.Controllers
 				return StatusCode(201);
 			} catch (EntityNotFoundException e ) {
 				return NotFound(new { e.Message });
-			} catch (Exception) {
-				return StatusCode(500);
+			} catch (DataAlreadyExistsException e) {
+				return Conflict(new { Message = "Game is already on that platform." });
+				} catch (Exception) {
+				return StatusCode(500, ServerErrorResponse.Message);
 			}
 		}
 
@@ -42,13 +45,11 @@ namespace VideoGamer.Controllers
 			try
 			{
 				await _gamePlatformService.Delete(id, dto);
-				return StatusCode(201);
-			} catch (EntityNotFoundException e)
-			{
+				return NoContent();
+			} catch (EntityNotFoundException e) {
 				return NotFound(new { e.Message });
-			} catch (Exception)
-			{
-				return StatusCode(500);
+			} catch (Exception) {
+				return StatusCode(500, new { ServerErrorResponse.Message });
 			}
 		}
 	}
