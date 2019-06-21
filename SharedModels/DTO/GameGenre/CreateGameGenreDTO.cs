@@ -4,6 +4,11 @@ namespace SharedModels.DTO.GameGenre
 {
 	public class CreateGameGenreDTO
 	{
-		public IEnumerable<int> Genres { get; set; }
+		public CreateGameGenreDTO()
+		{
+			Genres = new List<int>();
+		}
+
+		public List<int> Genres { get; set; }
 	}
 }

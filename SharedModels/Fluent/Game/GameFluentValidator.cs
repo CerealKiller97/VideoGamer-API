@@ -21,7 +21,9 @@ namespace SharedModels.Fluent.Game
 				.MinimumLength(5)
 				.WithMessage("Name must be at least 5 characters long.")
 				.MaximumLength(255)
-				.WithMessage("Name can't be longer than 255 characters.");
+				.WithMessage("Name can't be longer than 255 characters.")
+				.Must(BeUniqueName)
+				.WithMessage("Name already exists.");
 
 			RuleFor(g => g.Engine)
 				.NotEmpty()
@@ -81,6 +83,11 @@ namespace SharedModels.Fluent.Game
 		protected virtual bool ValidPlatforms(List<int> platforms)
 		{
 			return platforms.Count != 0;
+		}
+
+		protected virtual bool BeUniqueName(string Name)
+		{
+			return !_context.Games.Any(g => g.Name == Name);
 		}
 	}
 }

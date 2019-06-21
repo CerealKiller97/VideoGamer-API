@@ -4,10 +4,12 @@ using Aplication.Helpers.MyComicList.Application.Helpers;
 using Aplication.Interfaces;
 using Aplication.Pagination;
 using Aplication.Searches;
+using Domain;
 using Domain.Relations;
 using EntityConfiguration;
 using Microsoft.EntityFrameworkCore;
 using SharedModels.DTO.Game;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -22,7 +24,7 @@ namespace EFServices.Services
 
 		}
 
-		public async Task<PagedResponse<Game>> All(GameSearchRequest request) 
+		public async Task<PagedResponse<SharedModels.DTO.Game.Game>> All(GameSearchRequest request) 
         {
             var query = _context.Games
                                 .Include(g => g.Publisher)
@@ -33,7 +35,7 @@ namespace EFServices.Services
             
             var buildedQuery = BuildQuery(query, request);
 
-            return buildedQuery.Select(game => new Game
+            return buildedQuery.Select(game => new SharedModels.DTO.Game.Game
 			{
                 Id = game.Id,
                 Name = game.Name,
@@ -65,13 +67,17 @@ namespace EFServices.Services
 				ReleaseDate = dto.ReleaseDate,
 				UserId = dto.UserId,
 				GameMode = dto.GameMode,
-				AgeLabel = dto.AgeLabel,
+				AgeLabel = (PegiAgeRating) 12,
 				Path = path
 			};
-			
+
+			List<GamePlatform> platforms = new List<GamePlatform>();
+			List<GameGenre> genres = new List<GameGenre>();
+
+
 			foreach (int platform in dto.Platforms)
 			{
-				game.GamePlatforms.Add(new GamePlatform
+				platforms.Add(new GamePlatform
 				{
 					PlatformId = platform
 				});
@@ -79,11 +85,14 @@ namespace EFServices.Services
 
 			foreach (int genre in dto.Genres)
 			{
-				game.GameGenres.Add(new GameGenre
+				genres.Add(new GameGenre
 				{
 					GenreId = genre
 				});
 			}
+
+			game.GameGenres = genres;
+			game.GamePlatforms = platforms;
 
 			await _context.Games.AddAsync(game);
 
@@ -103,7 +112,7 @@ namespace EFServices.Services
             _context.SaveChanges();
         }
 
-        public async Task<Game> Find(int id)
+        public async Task<SharedModels.DTO.Game.Game> Find(int id)
         {
             var game = await _context.Games
 								.Include(g => g.Publisher)
@@ -117,7 +126,18 @@ namespace EFServices.Services
                 throw new EntityNotFoundException("Game");
             }
 
-            return new Game
+			var genres = game.GameGenres.Select(g => new SharedModels.DTO.Genre.Genre
+			{
+				Id = g.Genre.Id,
+				Name = g.Genre.Name
+			}).ToList();
+
+			//var platforms = game.GamePlatforms.Select(p => new SharedModels.DTO.GamePlatform.GamePlatform
+			//{
+			//	Platforms = p.Platform.Name.ToString()
+			//}).ToList();
+
+			return new SharedModels.DTO.Game.Game
 			{
                 Id = game.Id,
                 AgeLabel = game.AgeLabel.ToString(),
@@ -127,14 +147,31 @@ namespace EFServices.Services
                 PublisherName = game.Publisher.Name,
 				DeveloperName = game.Developer.Name,
 				ImagePath = game.Path,
-				ReleaseDate = game.ReleaseDate
+				ReleaseDate = game.ReleaseDate,
+				Genres = genres,
+				// Platforms = platforms
             };
         }
 
         public async Task Update(int id, CreateGameDTO dto)
         {
-            
-        }
+			var game = await _context.Games.FirstOrDefaultAsync(g => g.Id == id);
+
+			if (game == null)
+			{
+				throw new EntityNotFoundException("Game");
+			}
+
+			if (game.Name != dto.Name)
+			{
+				game.Name = dto.Name;
+			}
+
+			if (game.Engine != dto.Engine)
+			{
+				game.Engine = dto.Engine;
+			}
+		}
 
 
         protected override IQueryable<Domain.Game> BuildQuery(IQueryable<Domain.Game> query, GameSearchRequest request)

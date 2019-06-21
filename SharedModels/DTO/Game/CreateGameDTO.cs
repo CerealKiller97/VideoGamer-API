@@ -15,7 +15,7 @@ namespace SharedModels.DTO.Game
 		public int UserId { get; set; } = 4;
         public GameModes GameMode { get; set; }
         public int DeveloperId { get; set; }
-        public List<int> Genres = new List<int>() { 1,3 };
+        public List<int> Genres = new List<int>() { 1, 5 };
 		public List<int> Platforms = new List<int>() { 1, 3 };
         public IFormFile Path { get; set; }
 	}

@@ -39,7 +39,8 @@ namespace VideoGamer.Dependency
 					.AddTransient<IRegisterService, EFRegisterService>()
 					.AddTransient<ILoginService, EFLoginService>()
 					.AddTransient<IPublisherService, EFPublisherService>()
-					.AddTransient<IGameGenreService, EFGameGenreService>();
+					.AddTransient<IGameGenreService, EFGameGenreService>()
+					.AddTransient<IGamePlatformService, EFGamePlatformService>();
 
 			services.AddSingleton<IFileService, FileUploadService>();
 

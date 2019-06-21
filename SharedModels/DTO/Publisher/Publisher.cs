@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace SharedModels.DTO
+namespace SharedModels.DTO.Publisher
 {
 	public class Publisher 
 	{

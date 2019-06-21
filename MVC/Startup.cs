@@ -39,7 +39,8 @@ namespace MVC
 			});
 
 			services.AddTransient<IGameService, EFGameService>()
-					.AddTransient<IDeveloperService, EFDeveloperService>();
+					.AddTransient<IDeveloperService, EFDeveloperService>()
+					.AddTransient<IPublisherService, EFPublisherService>();
 
 			services.AddSingleton<IFileService, FileUploadService>();
 
@@ -55,11 +56,11 @@ namespace MVC
 				options.Cookie.IsEssential = true;
 			});
 
-			services.AddMvc(options =>
-			{
-				options.Filters.Add(new ModelStateFilter());
-			})
-			.AddSessionStateTempDataProvider();
+			//services.AddMvc(options =>
+			//{
+			//	options.Filters.Add(new ModelStateFilter());
+			//})
+			//.AddSessionStateTempDataProvider();
 			//.AddFluentValidation(options =>
 			//{
 			//	options.RegisterValidatorsFromAssemblyContaining<Startup>();

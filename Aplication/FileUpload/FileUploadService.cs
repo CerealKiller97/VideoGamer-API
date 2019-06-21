@@ -20,18 +20,26 @@ namespace Aplication.FileUpload
 			List<string> allowedTypes = new List<string>()
 			{
 				".jpg",
-				".jpeg"
+				".jpeg",
+				".png",
+				".gif"
 			};
 
-			string fileName = Guid.NewGuid() + "_" + file.FileName;
+			string fileName = Path.GetFileNameWithoutExtension(file.FileName);
+			string fileExtension = Path.GetExtension(file.FileName);
 
-			string path = Path.Combine(Directory.GetParent(Directory.GetCurrentDirectory()) + "/MVC", "wwwroot/images", fileName);
+			if (!allowedTypes.Contains(fileExtension))
+				throw new Exception("Invalid file format.");
+
+			string fullName = $"{Guid.NewGuid()}_{fileName}{fileExtension}";
+
+			string path = Path.Combine(Directory.GetParent(Directory.GetCurrentDirectory()) + "/MVC", "wwwroot/images", fullName);
 			using (var fileStream = new FileStream(path, FileMode.Create))
 			{
 				await file.CopyToAsync(fileStream);
 			}
 
-			return fileName;
+			return path;
 		}
 	}
 }

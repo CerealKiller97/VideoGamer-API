@@ -10,6 +10,7 @@ using EntityConfiguration;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SharedModels.DTO;
+using SharedModels.DTO.Publisher;
 using SharedModels.Fluent.Publisher;
 using SharedModels.Formatters;
 

@@ -10,6 +10,7 @@ using Domain;
 using EntityConfiguration;
 using Microsoft.EntityFrameworkCore;
 using SharedModels.DTO;
+using SharedModels.DTO.Publisher;
 
 namespace EFServices.Services
 {
@@ -19,7 +20,7 @@ namespace EFServices.Services
         {
         }
 
-        public async Task<PagedResponse<SharedModels.DTO.Publisher>> All(PublisherSearchRequest request)
+        public async Task<PagedResponse<SharedModels.DTO.Publisher.Publisher>> All(PublisherSearchRequest request)
         {
             var query = _context.Publishers
 				.Include(p => p.Games)
@@ -27,7 +28,7 @@ namespace EFServices.Services
 
             var buildedQuery = BuildQuery(query, request);
 
-            return buildedQuery.Select(p => new SharedModels.DTO.Publisher
+            return buildedQuery.Select(p => new SharedModels.DTO.Publisher.Publisher
 			{
                 Id = p.Id,
                 Name = p.Name,
@@ -51,7 +52,7 @@ namespace EFServices.Services
 
         public async Task<int> Count() => await _context.Publishers.CountAsync();
 
-        public async Task Create(CreatePublisherDTO dto)
+        public async Task Create(SharedModels.DTO.CreatePublisherDTO dto)
         {
             await _context.Publishers.AddAsync(new Domain.Publisher
             {
@@ -78,7 +79,7 @@ namespace EFServices.Services
             await _context.SaveChangesAsync();
         }
 
-        public async Task<SharedModels.DTO.Publisher> Find(int id)
+        public async Task<SharedModels.DTO.Publisher.Publisher> Find(int id)
         {
 			var pub = await _context.Publishers
 				.Include(d => d.Games)
@@ -106,7 +107,7 @@ namespace EFServices.Services
 				};
 			});
 
-			return new SharedModels.DTO.Publisher
+			return new SharedModels.DTO.Publisher.Publisher
 			{
 				Id = pub.Id,
 				Name = pub.Name,
