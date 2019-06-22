@@ -13,13 +13,8 @@ namespace MVC.Controllers
 	public class DevelopersController : Controller
     {
 		private readonly IDeveloperService _developerService;
-		private readonly VideoGamerDbContext _context;
 
-		public DevelopersController(IDeveloperService developerService, VideoGamerDbContext context)
-		{
-			_developerService = developerService;
-			_context = context;
-		}
+		public DevelopersController(IDeveloperService developerService) => _developerService = developerService;
 
 		// GET: Developers
 		public async Task<ActionResult> Index([FromQuery] DeveloperSearchRequest request)
@@ -48,7 +43,7 @@ namespace MVC.Controllers
 		}
 
         // GET: Developers/Create
-        public async Task<ActionResult> Create()
+        public ActionResult Create()
         {
             return View();
         }

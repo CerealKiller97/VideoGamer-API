@@ -2,11 +2,13 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Aplication.Exceptions;
+using Aplication.FileUpload;
 using Aplication.Interfaces;
 using Aplication.Pagination;
 using Aplication.Searches;
 using EntityConfiguration;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SharedModels.DTO.Game;
 using SharedModels.Fluent.Game;
@@ -22,11 +24,14 @@ namespace VideoGamer.Controllers
     {
         private readonly IGameService _gamesService;
         private readonly VideoGamerDbContext _context;
+		private readonly IFileService _fileService;
 
-        public GamesController(IGameService gamesService, VideoGamerDbContext context)
+
+		public GamesController(IGameService gamesService, VideoGamerDbContext context, IFileService fileService)
         {
             _gamesService = gamesService;
             _context = context;
+			_fileService = _fileService;
         }
 
 
@@ -80,25 +85,50 @@ namespace VideoGamer.Controllers
 		[ProducesResponseType(422)]
 		[ProducesResponseType(500)]
 		[HttpPost]
-        public async Task<IActionResult> Post([FromForm] CreateGameDTO dto)
-        {
-            var validator = new GameFluentValidator(_context);
-            var errors = await validator.ValidateAsync(dto);
+		public async Task<IActionResult> Post([FromForm] CreateGameDTO dto)
+		{
+			var validator = new GameFluentValidator(_context);
+			var errors = await validator.ValidateAsync(dto);
 
-            if (!errors.IsValid)
-            {
-                return UnprocessableEntity(ValidationFormatter.Format(errors));
-            }
+			if (!errors.IsValid)
+			{
+				return UnprocessableEntity(ValidationFormatter.Format(errors));
+			}
 
-	        try {
+			try
+			{
 				var user = Int32.Parse(HttpContext.User.FindFirst("id").Value);
 				dto.UserId = user;
 				await _gamesService.Create(dto);
-			    return StatusCode(201);
-			} catch (Exception e) {
-			  return StatusCode(500, e);
+				return StatusCode(201);
+			} catch (Exception e)
+			{
+				return StatusCode(500, e);
 			}
 		}
+		//      public async Task<IActionResult> Post([FromForm] CreateGameDTO dto, IFormFile Path)
+		//      {
+		//          var validator = new GameFluentValidator(_context);
+		//          var errors = await validator.ValidateAsync(dto);
+
+		//	var (Server, FilePath) = await _fileService.Upload(Path);
+		//	dto.FilePath = FilePath;
+		//	dto.Path = Server;
+
+		//	if (!errors.IsValid)
+		//          {
+		//              return UnprocessableEntity(ValidationFormatter.Format(errors));
+		//          }
+
+		//       try {
+		//		var user = Int32.Parse(HttpContext.User.FindFirst("id").Value);
+		//		dto.UserId = user;
+		//		await _gamesService.Create(dto);
+		//	    return StatusCode(201);
+		//	} catch (Exception e) {
+		//	  return StatusCode(500, e);
+		//	}
+		//}
 
 		// PUT: api/Games/5
 		/// <summary>

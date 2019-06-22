@@ -1,4 +1,5 @@
 ﻿using Domain;
+using Microsoft.AspNetCore.Http;
 using System;
 
 namespace SharedModels.DTO.Game
@@ -13,7 +14,7 @@ namespace SharedModels.DTO.Game
 		public int UserId { get; set; }
         public GameModes GameMode { get; set; }
         public int DeveloperId { get; set; }
-        public string Path { get; set; }
 		public string FilePath { get; set; }
+		public IFormFile Path { get; set; }
 	}
 }

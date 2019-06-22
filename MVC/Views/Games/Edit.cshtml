@@ -1,57 +1,112 @@
-﻿@model SharedModels.DTO.Game.CreateGameDTODataAnnotations
+﻿@model SharedModels.DTO.Game.UpdateGameDataAnnotations
 
 @{
-    ViewData["Title"] = "Edit";
+    ViewData["Title"] = "Update";
+    @using Domain;
+    var values = Enum.GetValues(typeof(Platforms))
+                     .Cast<Platforms>()
+                     .ToList();
 }
 
-<h1>Edit</h1>
+<h1>Update game</h1>
 
-<h4>CreateGameDTODataAnnotations</h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="Edit">
+        <form asp-action="Edit" enctype="multipart/form-data">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
                 <label asp-for="Name" class="control-label"></label>
-                <input asp-for="Name" class="form-control" />
+                <input asp-for="Name" class="form-control" value="@ViewBag.Game.Name" />
                 <span asp-validation-for="Name" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Engine" class="control-label"></label>
-                <input asp-for="Engine" class="form-control" />
+                <input asp-for="Engine" class="form-control" value="@ViewBag.Game.Engine" />
                 <span asp-validation-for="Engine" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="PublisherId" class="control-label"></label>
-                <input asp-for="PublisherId" class="form-control" />
                 <span asp-validation-for="PublisherId" class="text-danger"></span>
+                <label asp-for="PublisherId" class="control-label"></label>
+                <select asp-for="PublisherId" class="form-control">
+                    @foreach (var item in ViewBag.Publishers)
+                    {
+                        <option 
+                          value="@item.Id"
+                          class="form-control"
+                           selected="@item.Id == ViewBag.Game.PublisherId ? selected  : null "
+                        >
+                             @item.Name
+                        </option>
+                    }
+                </select>
             </div>
             <div class="form-group">
                 <label asp-for="AgeLabel" class="control-label"></label>
-                <input asp-for="AgeLabel" class="form-control" />
                 <span asp-validation-for="AgeLabel" class="text-danger"></span>
+                <select asp-for="AgeLabel" class="form-control">
+                    @foreach (var item in ViewBag.ageLabels)
+                    {
+                        <option 
+                          value="@item"  
+                          class="form-control"
+                          selected="@item == ViewBag.Game.AgeLabel ? selected  : null "
+                        >
+                            Pegi @item
+                        </option>
+                    }
+                </select>
             </div>
             <div class="form-group">
                 <label asp-for="ReleaseDate" class="control-label"></label>
-                <input asp-for="ReleaseDate" class="form-control" />
+                <input id="date" asp-for="ReleaseDate" class="form-control"value="@Html.Raw(ViewBag.Game.ReleaseDate.ToLocalTime().ToString())" />
                 <span asp-validation-for="ReleaseDate" class="text-danger"></span>
+                
             </div>
             <div class="form-group">
                 <label asp-for="UserId" class="control-label"></label>
-                <input asp-for="UserId" class="form-control" />
+                <input asp-for="UserId" class="form-control" value="4" disabled />
                 <span asp-validation-for="UserId" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="GameMode" class="control-label"></label>
-                <input asp-for="GameMode" class="form-control" />
                 <span asp-validation-for="GameMode" class="text-danger"></span>
+                <select asp-for="GameMode" class="form-control">
+                    @foreach (int i in ViewBag.gameModes)
+                    {
+                        <option 
+                          value="@i" 
+                          class="form-control"
+                          selected="@i == ViewBag.Game.GameMode ? selected  : null "
+                        >
+                            @Enum.GetName(typeof(GameModes), i)
+                        </option>
+                    }
+                </select>
             </div>
             <div class="form-group">
                 <label asp-for="DeveloperId" class="control-label"></label>
-                <input asp-for="DeveloperId" class="form-control" />
                 <span asp-validation-for="DeveloperId" class="text-danger"></span>
+                <select asp-for="DeveloperId" class="form-control">
+                    @foreach (var item in ViewBag.Developers)
+                    {
+                        <option 
+                          value="@item.Id" 
+                          class="form-control"
+                          selected="@item.Id == ViewBag.Game.DeveloperId ? selected  : null "
+                        >
+                            @item.Name
+                        </option>
+                    }
+                </select>
             </div>
+
+            <div class="form-group">
+                <label asp-for="Path" class="control-label"></label>
+                <input type="file" name="Path" asp-for="Path" class="form-control"/>
+                <span asp-validation-for="Path" class="text-danger"></span>
+            </div>
+
             <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-primary" />
             </div>
@@ -66,3 +121,9 @@
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 }
+
+
+<script>
+    const date = document.querySelector('#date')
+    date.value = @ViewBag.Game.ReleaseDate
+</script>

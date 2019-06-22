@@ -56,6 +56,8 @@ namespace EFServices.Services
 
         public async Task Create(CreateGameDTO dto)
         {
+			var (Server, FilePath) = await _fileService.Upload(dto.Path);
+
 			var game = new Domain.Game
 			{
 				Name = dto.Name,
@@ -66,14 +68,32 @@ namespace EFServices.Services
 				UserId = dto.UserId,
 				GameMode = dto.GameMode,
 				AgeLabel = dto.AgeLabel,
-				Path = dto.Path,
-				FullPath = dto.FilePath
+				Path = Server,
+				FullPath = FilePath
 			};
 
 			await _context.Games.AddAsync(game);
 
-            await _context.SaveChangesAsync();
-        }
+			await _context.SaveChangesAsync();
+
+			//var game = new Domain.Game
+			//{
+			//	Name = dto.Name,
+			//	Engine = dto.Engine,
+			//	DeveloperId = dto.DeveloperId,
+			//	PublisherId = dto.PublisherId,
+			//	ReleaseDate = dto.ReleaseDate,
+			//	UserId = dto.UserId,
+			//	GameMode = dto.GameMode,
+			//	AgeLabel = dto.AgeLabel,
+			//	Path = dto.Path,
+			//	FullPath = dto.FilePath
+			//};
+
+			//await _context.Games.AddAsync(game);
+
+			//         await _context.SaveChangesAsync();
+		}
 
         public async Task Delete(int id)
         {
@@ -163,13 +183,14 @@ namespace EFServices.Services
 
 			// Check if user sent picture, if send that means he is changing cover image
 
-			//if (dto.Path != null)
-			//{
-			//	string path = await _fileService.Upload(dto.Path);
-			//	// Remove previous image in case if user uploaded new image
-			//	await _fileService.Remove(game.Path);
-			//	game.Path = path;
-			//}
+			if (dto.Path != null)
+			{
+				var (Server, FilePath) = await _fileService.Upload(dto.Path);
+				//Remove previous image in case if user uploaded new image
+				await _fileService.Remove(game.FullPath);
+				game.Path = Server;
+				game.FullPath = FilePath;
+			}
 
 			if (game.Name != dto.Name)
 			{

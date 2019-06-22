@@ -21,6 +21,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Aplication\Aplication.csproj" />
     <ProjectReference Include="..\EFServices\EFServices.csproj" />
+    <ProjectReference Include="..\EntityConfiguration\EntityConfiguration.csproj" />
     <ProjectReference Include="..\SharedModels\SharedModels.csproj" />
   </ItemGroup>
 

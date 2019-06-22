@@ -3,6 +3,7 @@ using Aplication.FileUpload;
 using Aplication.Helpers;
 using Aplication.Interfaces;
 using Aplication.Searches;
+using Domain;
 using EntityConfiguration;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -21,22 +22,17 @@ namespace MVC.Controllers
 		private readonly IGameService _gameService;
 		private readonly IPublisherService _publisherService;
 		private readonly IDeveloperService _developerService;
-		private readonly IConfiguration _configuration;
 		private readonly IFileService _fileService;
 
-		private readonly VideoGamerDbContext _context;
 		
 		public GamesController(IGameService gameService, 
 			IPublisherService publisherService, 
 			IDeveloperService developerService, 
-			VideoGamerDbContext context, IConfiguration configuration,
 			IFileService service)
 		{
 			_gameService = gameService;
 			_publisherService = publisherService;
 			_developerService = developerService;
-			_context = context;
-			_configuration = configuration;
 			_fileService = service;
 		}
 
@@ -69,18 +65,16 @@ namespace MVC.Controllers
         // GET: Games/Create
         public async Task<ActionResult> Create()
         {
-			var publisherRequest = new PublisherSearchRequest {
-				PerPage = 500
-			};
+			var publisherRequest = new PublisherSearchRequest { PerPage = 500 };
 
-			var developerRequest = new DeveloperSearchRequest {
-				PerPage = 500
-			};
+			var developerRequest = new DeveloperSearchRequest { PerPage = 500 };
 
 			var publishers = await _publisherService.All(publisherRequest);
 			var developers = await _developerService.All(developerRequest);
-			ViewData["publishers"] = (List<Publisher>) publishers.Data;
-			ViewData["developers"] = (List<Developer>) developers.Data;
+
+			ViewBag.Publishers = (List<SharedModels.DTO.Publisher.Publisher>) publishers.Data;
+			ViewBag.Developers = (List<SharedModels.DTO.Developer.Developer>) developers.Data;
+
 			return View();
         }
 
@@ -91,7 +85,7 @@ namespace MVC.Controllers
         {
 			try
 			{
-				var (Server, FilePath) = await _fileService.Upload(Path);
+				//var (Server, FilePath) = await _fileService.Upload(Path);
 
 				var dtoNew = new CreateGameDTO {
 					AgeLabel = dto.AgeLabel,
@@ -99,11 +93,10 @@ namespace MVC.Controllers
 					Engine = dto.Engine,
 					GameMode = dto.GameMode,
 					Name = dto.Name,
-					Path = Server,
 					PublisherId = dto.PublisherId,
 					ReleaseDate = dto.ReleaseDate,
 					UserId = dto.UserId,
-					FilePath = FilePath
+					Path = Path
 				};
 
 				await _gameService.Create(dtoNew);
@@ -119,13 +112,27 @@ namespace MVC.Controllers
         public async Task<IActionResult> Edit(int id)
         {
 			try {
-				var developer = await _gameService.Find(id);
-				return View(developer);
+				var game = await _gameService.Find(id);
+
+				var publisherRequest = new PublisherSearchRequest { PerPage = 500 };
+
+				var developerRequest = new DeveloperSearchRequest { PerPage = 500 };
+
+				var publishers = await _publisherService.All(publisherRequest);
+				var developers = await _developerService.All(developerRequest);
+				ViewBag.Publishers = (List<SharedModels.DTO.Publisher.Publisher>) publishers.Data;
+				ViewBag.Developers = (List<SharedModels.DTO.Developer.Developer>) developers.Data;
+				ViewBag.Game = (SharedModels.DTO.Game.Game) game;
+				ViewBag.ageLabels = new[] { 3, 7, 12, 16, 18 };
+
+				ViewBag.gameModes = Enum.GetValues(typeof(GameModes));
+
+				return View();
 			} catch (EntityNotFoundException e) {
 				TempData["error"] = e.Message;
 				return RedirectToAction(nameof(Index));
-			} catch (Exception) {
-				TempData["error"] = "Exception";
+			} catch (Exception e) {
+				TempData["error"] = e.Message;
 				return RedirectToAction(nameof(Index));
 			}
 		}
@@ -133,30 +140,35 @@ namespace MVC.Controllers
         // POST: Games/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [FromForm] CreateGameDTODataAnnotations dto)
+        public async Task<IActionResult> Edit(int id, [FromForm] UpdateGameDataAnnotations dto, IFormFile Path)
         {
 			if (!ModelState.IsValid)
 			{
-				TempData["error"] = "Please fill all blank boxes."; //mapped.ToString();
+				TempData["error"] = "Please fill all blank boxes.";
 				return RedirectToAction(nameof(Edit), new { id });
 			}
+
 			try
 			{
 				var newDto = new CreateGameDTO
 				{
-					
+					AgeLabel = dto.AgeLabel,
+					DeveloperId = dto.DeveloperId,
+					Engine = dto.Engine,
+					GameMode = dto.GameMode,
+					Name = dto.Name,
+					PublisherId = dto.PublisherId,
+					ReleaseDate = dto.ReleaseDate,
+					UserId = dto.UserId,
 				};
-				// TODO: Add update logic here
+
 				await _gameService.Update(id, newDto);
 				return RedirectToAction(nameof(Index));
-			} catch (EntityNotFoundException e)
-			{
+			} catch (EntityNotFoundException e) {
 				TempData["error"] = e.Message;
 				return RedirectToAction(nameof(Index));
-			} catch (Exception e)
-			{
-				string error = e.InnerException.Message;
-				
+			} catch (Exception e) {
+				TempData["error"] = "Server error, please try later.";
 				return RedirectToAction(nameof(Edit), new { id });
 			}
 		}

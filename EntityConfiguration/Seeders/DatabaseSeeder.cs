@@ -21,7 +21,7 @@ namespace EntityConfiguration.Seeders
             AddGames();
             AddPlatforms();
             AddGameGenre();
-            AddGamePlatform();
+            // AddGamePlatform();
 		}
 
         public void AddGameGenre()

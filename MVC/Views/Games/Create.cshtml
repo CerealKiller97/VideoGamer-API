@@ -32,8 +32,9 @@
                 <span asp-validation-for="Engine" class="text-danger"></span>
             </div>
             <div class="form-group">
+                <label asp-for="PublisherId" class="control-label"></label>
+                <span asp-validation-for="PublisherId" class="text-danger"></span>
                 <select asp-for="PublisherId" class="form-control">
-                    <span asp-validation-for="PublisherId" class="text-danger"></span>
                     @foreach (var item in (List<SharedModels.DTO.Publisher.Publisher>)publishers)
                     {
                         <option value="@item.Id" class="form-control">@item.Name</option>
@@ -42,8 +43,8 @@
             </div>
             <div class="form-group">
                 <label asp-for="AgeLabel" class="control-label"></label>
+                <span asp-validation-for="AgeLabel" class="text-danger"></span>
                 <select asp-for="AgeLabel" class="form-control">
-                    <span asp-validation-for="AgeLabel" class="text-danger"></span>
                     @foreach (var item in ageLabels)
                     {
                         <option value="@item" class="form-control">Pegi @item</option>
@@ -62,8 +63,8 @@
             </div>
             <div class="form-group">
                 <label asp-for="GameMode" class="control-label"></label>
+                <span asp-validation-for="GameMode" class="text-danger"></span>
                 <select asp-for="GameMode" class="form-control">
-                    <span asp-validation-for="GameMode" class="text-danger"></span>
                     @foreach (int i in gameModes)
                     {
                         <option value="@i" class="form-control">@Enum.GetName(typeof(GameModes), i)</option>
@@ -71,9 +72,9 @@
                 </select>
             </div>
             <div class="form-group">
+                <span asp-validation-for="DeveloperId" class="text-danger"></span>
                 <label asp-for="DeveloperId" class="control-label"></label>
                 <select asp-for="DeveloperId" class="form-control">
-                    <span asp-validation-for="DeveloperId" class="text-danger"></span>
                     @foreach (var item in (List<SharedModels.DTO.Developer.Developer>)developers)
                     {
                         <option value="@item.Id" class="form-control">@item.Name</option>

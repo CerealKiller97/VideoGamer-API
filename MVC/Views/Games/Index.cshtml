@@ -92,7 +92,7 @@
         <div class="col-lg-4 offset-3">
             <nav aria-label="Page navigation example">
                 <ul class="pagination justify-content-center">
-                    @for (int i = 0; i < (int)ViewData["pagesCount"]; i++)
+                    @for (int i = 0; i < (int) ViewData["pagesCount"]; i++)
                     {
                         int current = i + 1;
                         var perPageQueryString = @Context.Request.Query["Page"].ToString();

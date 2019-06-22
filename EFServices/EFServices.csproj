@@ -13,6 +13,7 @@
     <ProjectReference Include="..\Aplication\Aplication.csproj" />
     <ProjectReference Include="..\EntityConfiguration\EntityConfiguration.csproj" />
     <ProjectReference Include="..\PasswordHashing\PasswordHashing.csproj" />
+    <ProjectReference Include="..\SharedModels\SharedModels.csproj" />
   </ItemGroup>
 
   <ItemGroup>
