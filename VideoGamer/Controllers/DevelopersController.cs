@@ -126,7 +126,7 @@ namespace VideoGamer.Controllers
                 await _developerService.Update(id, dto);
                 return NoContent();
             } catch (EntityNotFoundException e) {
-                return NotFound(e.Message);
+                return NotFound(new { e.Message });
             } catch (Exception) {
 				return StatusCode(500, new { ServerErrorResponse.Message });
 			}
@@ -146,11 +146,11 @@ namespace VideoGamer.Controllers
 		[HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
-            try {
-                await _developerService.Delete(id);
-                return NoContent();
-            } catch (EntityNotFoundException e) {
-                return NotFound(e.Message);
+			try {
+				await _developerService.Delete(id);
+				return NoContent();
+			} catch (EntityNotFoundException e) {
+				return NotFound(new { e.Message });
             } catch (Exception) {
 				return StatusCode(500, new { ServerErrorResponse.Message });
 			}

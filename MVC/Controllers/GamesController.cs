@@ -160,6 +160,7 @@ namespace MVC.Controllers
 					PublisherId = dto.PublisherId,
 					ReleaseDate = dto.ReleaseDate,
 					UserId = dto.UserId,
+					Path = Path
 				};
 
 				await _gameService.Update(id, newDto);

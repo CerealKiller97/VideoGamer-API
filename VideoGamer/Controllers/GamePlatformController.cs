@@ -20,7 +20,16 @@ namespace VideoGamer.Controllers
 		{
 			_gamePlatformService = service;
 		}
-
+		/// <summary>
+		/// Add platform to specific game
+		/// </summary>
+		/// <returns>Inserted</returns>
+		/// <response code="201"></response>
+		/// <response code="404">Game not found.</response>
+		/// <response code="500">Server error, please try later.</response>
+		[ProducesResponseType(201)]
+		[ProducesResponseType(404)]
+		[ProducesResponseType(500)]
 		[HttpPost("{id}")]
 		public async Task<IActionResult> AddPlatform(int id, GamePlatform dto)
 		{
@@ -36,6 +45,16 @@ namespace VideoGamer.Controllers
 			}
 		}
 
+		/// <summary>
+		/// Delete specific platform from a game
+		/// </summary>
+		/// <returns>Wanted game</returns>
+		/// <response code="200"></response>
+		/// <response code="404">Game not found.</response>
+		/// <response code="500">Server error, please try later.</response>
+		[ProducesResponseType(204)]
+		[ProducesResponseType(404)]
+		[ProducesResponseType(500)]
 		[HttpDelete("{id}")]
 		public async Task<IActionResult> DeletePlatform(int id, GamePlatform dto)
 		{
