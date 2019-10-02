@@ -1,7 +1,9 @@
 # VideoGamer-API
 ASP school project
 
-RESTFul API and ASP.NET Core Web app
-- Using microservice architecture 
+## Feature
+
+- RESTFul API and ASP.NET Core Web app
+- Service based
 - JWT
 - Fluent Validation
