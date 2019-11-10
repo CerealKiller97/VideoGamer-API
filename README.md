@@ -7,3 +7,4 @@ ASP school project
 - Service based
 - JWT
 - Fluent Validation
+- SOLID Principles
