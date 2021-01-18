@@ -1,5 +1,4 @@
 # VideoGamer-API
-ASP school project
 
 ## Feature
 
